@@ -1,15 +1,15 @@
 // ==UserScript==
-// @name         WME {{identifier}} checker
+// @name         WME checker
 // @version      0.10
-// @description  {{identifier}} checker
+// @description  checker
 // @author       ixxvivxxi
 // @include      https://www.waze.com/editor*
 // @include      https://www.waze.com/*/editor*
 // @include      https://beta.waze.com/editor*
 // @include      https://beta.waze.com/*/editor*
 // @grant        none
-// @downloadURL  {{download-url}}
-// @namespace    {{download-url}}
+// @downloadURL  
+// @namespace    
 // @require      https://greasyfork.org/scripts/24851-wazewrap/code/WazeWrap.js
 // ==/UserScript==
 
@@ -41,9 +41,9 @@ function checkerBelarus_bootstrap() {
 checkerBelarus_bootstrap();
 
 function startchecker() {
-    const url = '{{backend-url}}';
-    const identifier = '{{identifier}}';
-    const countryID = 232;
+    const url = '';
+    const identifier = 'identifier';
+    const countryID = 0;
     let regions = [];
 
     function initCheckerTab() {

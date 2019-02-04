@@ -79,5 +79,5 @@ var ENV = {
 * Visit app at [http://localhost:4200](http://localhost:4200).
 
 ## Building
-
-`./build.sh`
+* change `build.conf` with you settings
+* `./build.sh`
