@@ -80,4 +80,5 @@ var ENV = {
 
 ## Building
 * change `build.conf` with you settings
+* `git update-index --assume-unchanged build.conf`
 * `./build.sh`
