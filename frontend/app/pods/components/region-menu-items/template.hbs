@@ -1,0 +1,139 @@
+{{#link-to 'region.segments' region.id  (query-params type='all' page=1) class="item" }}
+  <div class="ui small teal label">
+    {{#if fetchAmounts.isRunning}}
+      <i class="spinner loading icon"></i>
+    {{else}}
+      {{amounts.all}}
+    {{/if}}
+  </div>
+  <div class="ui small blue label">
+    {{#if fetchAmounts.isRunning}}
+      <i class="spinner loading icon"></i>
+    {{else}}
+      {{amounts.length}}
+    {{/if}}
+        km
+  </div>
+  {{t 'segments.all'}}
+{{/link-to}}
+
+{{#link-to 'region.segments' region.id  (query-params type='withoutSpeed' page=1) class="item" }}
+  <div class="ui small teal label">
+    {{#if fetchAmounts.isRunning}}
+      <i class="spinner loading icon"></i>
+    {{else}}
+      {{amounts.withoutSpeed}}
+    {{/if}}
+  </div>
+  {{t 'segments.withoutSpeed'}}
+{{/link-to}}
+
+{{#link-to 'region.segments' region.id  (query-params type='speedMore90InCity' page=1) class="item" }}
+  <div class="ui small teal label">
+    {{#if fetchAmounts.isRunning}}
+      <i class="spinner loading icon"></i>
+    {{else}}
+      {{amounts.speedMore90InCity}}
+    {{/if}}
+  </div>
+  {{t 'segments.speedMore90InCity'}}
+{{/link-to}}
+
+{{#link-to 'region.segments' region.id (query-params type='withLowLock' page=1) class="item" }}
+  <div class="ui small teal label">
+    {{#if fetchAmounts.isRunning}}
+      <i class="spinner loading icon"></i>
+    {{else}}
+      {{amounts.withLowLock}}
+    {{/if}}
+  </div>
+  {{t 'segments.withLowLock'}}
+{{/link-to}}
+
+{{#link-to 'region.segments' region.id (query-params type='withoutTurn' page=1) class="item" }}
+  <div class="ui small teal label">
+    {{#if fetchAmounts.isRunning}}
+      <i class="spinner loading icon"></i>
+    {{else}}
+      {{amounts.withoutTurn}}
+    {{/if}}
+  </div>
+  {{t 'segments.withoutTurn'}}
+{{/link-to}}
+
+{{#link-to 'region.segments' region.id (query-params type='short' page=1) class="item" }}
+  <div class="ui small teal label">
+    {{#if fetchAmounts.isRunning}}
+      <i class="spinner loading icon"></i>
+    {{else}}
+      {{amounts.short}}
+    {{/if}}
+  </div>
+  {{t 'segments.short'}}
+{{/link-to}}
+
+{{#link-to 'region.segments' region.id (query-params type='withNameWithoutCity' page=1) class="item" }}
+  <div class="ui small teal label">
+    {{#if fetchAmounts.isRunning}}
+      <i class="spinner loading icon"></i>
+    {{else}}
+      {{amounts.withNameWithoutCity}}
+    {{/if}}
+  </div>
+  {{t 'segments.withNameWithoutCity'}}
+{{/link-to}}
+
+{{#link-to 'region.segments' region.id (query-params type='unpaved' page=1) class="item" }}
+  <div class="ui small teal label">
+    {{#if fetchAmounts.isRunning}}
+      <i class="spinner loading icon"></i>
+    {{else}}
+      {{amounts.unpaved}}
+    {{/if}}
+  </div>
+  {{t 'segments.unpaved'}}
+{{/link-to}}
+
+{{#link-to 'region.segments' region.id (query-params type='withAverageSpeedCamera' page=1) class="item" }}
+  <div class="ui small teal label">
+    {{#if fetchAmounts.isRunning}}
+      <i class="spinner loading icon"></i>
+    {{else}}
+      {{amounts.withAverageSpeedCamera}}
+    {{/if}}
+  </div>
+  {{t 'segments.withAverageSpeedCamera'}}
+{{/link-to}}
+
+{{#link-to 'region.segments' region.id (query-params type='new' page=1) class="item" }}
+  <div class="ui small teal label">
+    {{#if fetchAmounts.isRunning}}
+      <i class="spinner loading icon"></i>
+    {{else}}
+      {{amounts.new}}
+    {{/if}}
+  </div>
+  {{t 'segments.new'}}
+{{/link-to}}
+
+{{#link-to 'region.segments' region.id (query-params type='revDirection' page=1) class="item" }}
+  <div class="ui small teal label">
+    {{#if fetchAmounts.isRunning}}
+      <i class="spinner loading icon"></i>
+    {{else}}
+      {{amounts.revDirection}}
+    {{/if}}
+  </div>
+  {{t 'segments.revDirection'}}
+{{/link-to}}
+
+{{#link-to 'region.segments' region.id (query-params type='toll' page=1) class="item" }}
+  <div class="ui small teal label">
+    {{#if fetchAmounts.isRunning}}
+      <i class="spinner loading icon"></i>
+    {{else}}
+      {{amounts.toll}}
+    {{/if}}
+  </div>
+  {{t 'segments.toll'}}
+{{/link-to}}

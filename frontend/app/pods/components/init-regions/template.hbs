@@ -1,0 +1,8 @@
+<div class="ui small fluid vertical menu">
+    <div class="item">
+        {{#link-to 'init.regions.region' 0 class='ui primary small button'}}{{t 'newRegion'}}{{/link-to}}
+    </div>
+    {{#each regions as |region|}}
+        {{#link-to 'init.regions.region' region.id class='item'}}{{region.name}}{{/link-to}} 
+    {{/each}}
+</div>

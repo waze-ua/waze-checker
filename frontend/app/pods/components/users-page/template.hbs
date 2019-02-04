@@ -1,0 +1,43 @@
+<div class="sixteen wide column">
+{{#if fetchUsers.isRunning}}
+    <div class="ui active inverted dimmer">
+      <div class="ui large text loader">Loading</div>
+    </div>
+{{/if}}
+<div class="ui tiny form">
+    <div class="fields">
+        <div class="field">
+            <label>{{t 'user'}}</label>
+                <div class="ui icon input">
+                {{input value=searchUser enter=(action 'search' 'searchUser') placeholder=(t 'user')}}
+                <i class="remove link icon" {{action 'clearInput' 'searchUser'}}></i>
+            </div>
+        </div>
+    </div>
+</div>
+{{model-pagination model=users updateQueryParameter=updateQueryParameter}}
+  <div class="height-container">
+    <table class="ui sortable striped compact selectable table">
+      <thead>
+        <tr>
+          {{table-sortable-th text='id' order='id' currentOrder=orderBy orderType=orderType setOrder=(action 'setOrder')}}
+          {{table-sortable-th text=(t 'user') order='userName' currentOrder=orderBy orderType=orderType setOrder=(action 'setOrder')}}
+          {{table-sortable-th text=(t 'rank') order='rank' currentOrder=orderBy orderType=orderType setOrder=(action 'setOrder')}}
+          {{table-sortable-th text=(t 'firstEdit') order='firstEdit' currentOrder=orderBy orderType=orderType setOrder=(action 'setOrder')}}
+          {{table-sortable-th text=(t 'lastEdit') order='lastEdit' currentOrder=orderBy orderType=orderType setOrder=(action 'setOrder')}}
+        </tr>
+      </thead>
+      <tbody>
+        {{#each users as |user|}}
+          <tr>
+              <td>{{user.id}}</td>
+              <td><a href='https://www.waze.com/user/editor/{{user.userName}}' target="_blank">{{user.userName}}</a></td>
+              <td>{{user.humanizedRank}}</td>
+              <td>{{date-to-string user.firstEdit}}</td>
+              <td>{{date-to-string user.lastEdit}}</td>
+          </tr>    
+        {{/each}} 
+      </tbody>
+    </table>
+  </div>
+</div>

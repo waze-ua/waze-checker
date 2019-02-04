@@ -1,0 +1,18 @@
+{
+  "authors": [
+    {
+      "name": "Anton Sergeenkov",
+      "email": "ixxvivxxi@gmail.com"
+    }
+  ],
+  "description": "waze-checker",
+  "require": {
+    "php": ">=5.3.2",
+    "codeigniter/framework": "3.1.*",
+    "danielstjules/stringy": "^3.1",
+    "lesha888/geophp": "^1.2"
+  },
+  "require-dev": {
+    "mikey179/vfsStream": "1.1.*"
+  }
+}

@@ -1,0 +1,12 @@
+{{#each regions as |region|}}
+  <div class="four wide column">
+    <div class="ui large vertical menu">
+      {{#link-to 'region' region.id class="item" }}
+        <div class="header">{{region.name}}</div>
+        <small class="right aligned">({{date-to-string region.lastUpdate}})</small>
+      {{/link-to}}
+
+      {{region-menu-items region=region}}
+    </div>
+  </div>
+{{/each}}

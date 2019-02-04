@@ -1,0 +1,17 @@
+{{#if ajaxMethods.isRunning}}
+    <div class="ui active inverted dimmer">
+      <div class="ui large text loader">Loading</div>
+    </div>
+{{/if}}
+<button class="ui small button {{if (eq region.id 0) 'disabled'}}" {{action 'savePoly'}}>{{t 'savePolygon'}}</button>
+<button class="ui small button {{if (eq region.id 0) 'disabled'}}" {{action 'showBBoxes'}}>{{t 'showBBoxes'}}</button>
+  {{x-file-input
+    name="file"
+    action=(action "didSelectFiles")
+    class="ui small button"
+    alt=(t 'uploadKML')
+  }}
+
+<div class="ui basic segment">
+    <div id="map"> </div>
+</div>

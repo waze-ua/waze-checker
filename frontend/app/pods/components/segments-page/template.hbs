@@ -1,0 +1,86 @@
+{{#if fetchSegments.isRunning}}
+    <div class="ui active inverted dimmer">
+      <div class="ui large text loader">Loading</div>
+    </div>
+{{/if}}
+
+<div class="ui tiny form">
+  <div class="fields">
+    <div class="field">
+      <label>{{t 'city'}}</label>
+      <div class="ui icon input">
+        {{input value=searchCity enter=(action 'search' 'searchCity') placeholder=(t 'city')}}
+        <i class="remove link icon" {{action 'clearInput' 'searchCity'}}></i>
+      </div>
+    </div>
+    <div class="field">
+      <label>{{t 'street'}}</label>
+      <div class="ui icon input">
+        {{input value=searchStreet enter=(action 'search' 'searchStreet') placeholder=(t 'street')}}
+        <i class="remove link icon" {{action 'clearInput' 'searchStreet'}}></i>
+      </div>
+    </div>
+    {{queryParams.roadType}}
+    <div class="field">
+      <label>{{t 'roadType'}}</label>
+      {{#ui-dropdown class="fluid multiple selection" selected=selectedRoadTypes onChange=(action 'selectRoadTypes') as |execute mapper|}}
+        <i class="dropdown icon"></i>
+        <div class="default text">{{t 'roadType'}}</div>
+        <div class="menu">
+          {{#each roadTypes as |roadType|}}
+            <div class="item" data-value="{{map-value mapper roadType}}">
+              {{roadType.name}}
+            </div>
+          {{/each}}
+        </div>
+      {{/ui-dropdown}}
+    </div>
+    <div class="field">
+      <label>{{t 'user'}}</label>
+      <div class="ui icon input">
+        {{input value=searchUser enter=(action 'search' 'searchUser') placeholder=(t 'user')}}
+        <i class="remove link icon" {{action 'clearInput' 'searchUser'}}></i>
+      </div>
+    </div>
+    <div class="field">
+      <label>{{t 'lock'}}</label>
+      {{#ui-dropdown class="fluid multiple selection" selected=selectedLockRanks onChange=(action 'selectLockRanks') as |execute mapper|}}
+        <i class="dropdown icon"></i>
+        <div class="default text">{{t 'lock'}}</div>
+        <div class="menu">
+          {{#each lockRanks as |item|}}
+            <div class="item" data-value="{{map-value mapper item}}">
+              {{item.name}}
+            </div>
+          {{/each}}
+        </div>
+      {{/ui-dropdown}}
+    </div>
+  </div>
+</div>
+
+{{model-pagination model=segments updateQueryParameter=updateQueryParameter}}
+<div class="height-container">
+  <table class="ui sortable striped compact selectable fix-thead table">
+    <thead>
+      <tr>
+        {{table-sortable-th text='id' order='id' currentOrder=orderBy orderType=orderType setOrder=(action 'setOrder')}}
+        {{table-sortable-th text=(t 'city') order='street_city_name' currentOrder=orderBy orderType=orderType setOrder=(action 'setOrder') class="city-name"}}
+        {{table-sortable-th text=(t 'street') order='street_name' currentOrder=orderBy orderType=orderType setOrder=(action 'setOrder') class="street-name"}}
+        {{table-sortable-th text=(t 'roadType') order='roadType_name' currentOrder=orderBy orderType=orderType setOrder=(action 'setOrder')}}
+        {{table-sortable-th text=(t 'user') order='updatedBy_userName' currentOrder=orderBy orderType=orderType setOrder=(action 'setOrder')}}
+        {{table-sortable-th text=(t 'lock') order='lockRank' currentOrder=orderBy orderType=orderType setOrder=(action 'setOrder')}}
+        {{table-sortable-th text=(t 'date') order='updatedOn' currentOrder=orderBy orderType=orderType setOrder=(action 'setOrder')}}
+        <th>{{t 'direction'}}</th>
+        <th class="button-cell"></th>
+        <th class="button-cell"></th>
+      </tr>
+    </thead>
+    <tbody>
+      {{#each segments as |segment|}}
+        {{table-row segment=segment updateState=(action 'updateState')}}
+      {{/each}} 
+    </tbody>
+  </table>
+</div>
+{{!segments-pagination regionId=regionId segmentsModel=segmentsModel pages=pages}}

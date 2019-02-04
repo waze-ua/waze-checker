@@ -1,0 +1,11 @@
+{{#if isShow}}
+  <div class="ui pagination menu">
+    {{#each pages as |page|}}
+      {{#if (eq page.page '...')}}
+        <div class="item">{{page.page}}</div> 
+      {{else}}
+        <a class="item {{if (eq page.page activePage) 'active'}}" {{action 'changePage' page.page}}>{{page.page}}</a> 
+      {{/if}}
+    {{/each}}
+  </div>
+{{/if}}

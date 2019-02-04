@@ -1,0 +1,32 @@
+<div class="ui stackable fixed menu">
+  {{#link-to 'index' class="item" }}<i class="home icon"></i>{{/link-to}}
+
+  {{#each regions as |region|}}
+
+    {{#link-to 'region' region.id classNames='item' }}
+      {{region.name}}
+    {{/link-to}}
+
+  {{/each}}
+  <div class="right menu">
+    {{#link-to 'users' classNames='item' }}
+      {{t 'users'}}
+    {{/link-to}}  
+    {{#ui-dropdown class="ui dropdown item" selected=locale onChange=(action (mut locale))}}
+      <div class="default text"></div>
+      <div class="menu">
+        {{#each locales as |item|}}
+          <div class="item" data-value="{{item}}">
+            {{item}}
+          </div>
+        {{/each}}
+      </div>
+    {{/ui-dropdown}}
+  </div>
+</div>
+
+<div class="main-content">
+  <div class="ui grid">
+    {{outlet}}
+  </div>
+</div>

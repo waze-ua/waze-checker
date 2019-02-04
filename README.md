@@ -1,0 +1,3 @@
+# waze-checker
+
+## Building

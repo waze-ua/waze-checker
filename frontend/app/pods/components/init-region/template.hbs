@@ -1,0 +1,25 @@
+<div class="ui grid">
+    <div class="six wide column">
+        <form class="ui form">
+            <div class="field">
+                <label>{{t 'name'}}</label>
+                {{input value=region.name placeholder=(t 'name') }}
+            </div>
+            <button class="ui small grey button" {{action 'save'}}>{{t 'save'}}</button>
+            {{#unless region.isNew}}
+            <button class="ui right floated small red button" {{action 'delete'}}>{{t 'remove'}}</button>
+            {{/unless}}
+        </form>
+    </div>
+
+    <div class="ten wide column">
+
+    </div>
+
+    <div class="sixteen wide column">
+        <div class="ui segment">
+            {{region-map region=region regionId=region.id}}
+        </div>
+    </div>
+
+</div>

@@ -1,0 +1,73 @@
+body {
+  padding-top: 50px;
+}
+
+.main-content {
+  padding-right: 10px;
+  padding-left: 10px;
+}
+.ui.cards {
+  margin-top: 10px;
+}
+
+.ui.large.vertical.menu {
+  width: initial;
+}
+
+
+.ui.fixed.menu,
+.ui[class*="top fixed"].menu {
+  z-index: 1001;
+}
+
+.icon.remove-segment {
+  opacity: 0.1 !important;
+}
+
+tr:hover .icon.remove-segment {
+  opacity: 1 !important;
+}
+
+.height-container {
+  overflow-y: auto;
+  max-height: calc(100vh - 190px);
+  margin-top: 1rem;
+}
+
+.ui.table.fix-thead > thead > tr > th {
+  position: sticky;
+  top: 0;
+  background: #fff;
+  z-index: 11;
+  border-top: 1px solid rgba(34, 36, 38, 0.15);
+}
+
+.ui.sortable.table.fix-thead thead th.sorted,
+.ui.sortable.table.fix-thead thead th:hover {
+  background: #f2f2f2;
+}
+
+.ui.sortable.table.fix-thead {
+  border-top: none;
+}
+
+#map {
+  height: 600px;
+}
+
+.ui.selection.dropdown.visible,
+.ui.selection.dropdown.active {
+  z-index: 20;
+}
+
+th.city-name {
+  min-width: 200px;
+}
+
+th.street-name {
+  min-width: 200px;
+}
+
+th.button-cell {
+  width: 40px;
+}
