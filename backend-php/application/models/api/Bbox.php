@@ -13,7 +13,7 @@ class Bbox extends JSON_Model
 
     public $name = 'bbox';
 
-    private $itemsPerPage = 0;
+    public $itemsPerPage = 0;
 
     public $attrs = [
         'south',
