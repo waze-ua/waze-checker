@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         WME checker
-// @version      0.10
+// @version      0.11
 // @description  checker
 // @author       ixxvivxxi
 // @include      https://www.waze.com/editor*
