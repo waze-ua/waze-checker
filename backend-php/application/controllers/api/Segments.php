@@ -85,14 +85,12 @@ class Segments extends Json_api
 
             foreach ($segments as $segment) {
                 $coordinates = [];
-
                 foreach ($segment->geometry->coordinates as $coordinate) {
                     $coordinates[] = implode(' ', $coordinate);
                 }
-
                 $coordinates = implode(',', $coordinates);
 
-                //$lineString = GeoPHP::load("LINESTRING({$coordinates})", 'wkt');
+                $lineString = GeoPHP::load("LINESTRING({$coordinates})", 'wkt');
 
                 if ($regionGeometry->pointInPolygon($lineString->startPoint())) {
                     $ids[] = $segment->id;
@@ -167,12 +165,10 @@ class Segments extends Json_api
                         'lat'                   => $centroid->getY(),
                         'hasTransition'         => 0,
                         'startPoint'            => $GeoHash->write($lineString->startPoint()),
-                        'endPoint'              => $GeoHash->write($lineString->startPoint()),
+                        'endPoint'              => $GeoHash->write($lineString->endPoint()),
                         'region'                => $segment->region,
                     ];
-
                 }
-
             }
             if (count($ids) > 0) {
                 $this->db->where_in('id', $ids);
