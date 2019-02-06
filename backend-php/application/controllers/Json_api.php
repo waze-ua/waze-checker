@@ -103,10 +103,9 @@ class Json_api extends CI_Controller
         //$this->checkAuthorization();
         $this->loadModel($this->modelName);
 
-        
-
         $result = $this->mainModel->getMany($_GET);
         $result['data'] = $this->mainModel->getRelationships($result['data']);
+        $result['included'] = $this->mainModel->getIncludes($result['data']);
 
         foreach ($result['data'] as &$value) {
             $value = $this->mainModel->serialize($value);

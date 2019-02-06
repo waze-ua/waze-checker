@@ -167,7 +167,7 @@ export default Component.extend(QueryMixin, {
       query: [],
       region: get(this, 'region.id'),
       page: params.page,
-      //include: 'street,updatedBy',
+      include: ['street.city', 'updatedBy'],
     };
 
     let queryForType = this.getQueryForType(params.type);

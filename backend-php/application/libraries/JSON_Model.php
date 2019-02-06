@@ -10,15 +10,14 @@ class JSON_Model extends CI_Model
     public $attrs = [];
     public $belongsTo = []; // column_name => model_name
     public $hasMany = []; // model => column in model
-
-    private $joins = [];
+    
+    public $itemsPerPage = 30;
+    private $currentPage = 1;
 
     private $modelMap = null;
     private $joinArray = null;
+    private $includes = null;
     private $orderArr = null;
-    private $currentPage = 1;
-    public $itemsPerPage = 30;
-    // new
 
     public function __construct()
     {
@@ -37,42 +36,38 @@ class JSON_Model extends CI_Model
         return $this->sqlTable;
     }
 
-    // public function getIncluded($array = [])
-    // {
+    public function getIncludes($data = [])
+    {
+        $array = [];
+        if ($this->includes && $data) {
+            foreach ($this->includes as $include) {
+                $includes = explode('.', $include);
+                $field = $includes[0];
+                if (isset($this->belongsTo[$field])) {
+                    $modelName = $this->belongsTo[$field]['targetModel'];
+                    $ids = array_map(function ($item) use ($field) {
+                        return $item->$field;
+                    }, $data);
+                    $this->load->model('api/' . $modelName, $modelName);
+                    array_shift($includes);
 
-    //     $include = $this->input->get('include');
-    //     $arr = [];
+                    $result = $this->$modelName->getMany(['id' => implode(',', $ids), 'itemsPerPage' => 0, 'include' => $includes]);
+                    $result = $this->$modelName->getRelationships($result['data']);
+                    $currentIncludes = [];
+                    if ($includes) {
+                        $currentIncludes = $this->$modelName->getIncludes($result);
+                    }
 
-    //     if ($include && count($array) > 0) {
-    //         $models = $include;
-
-    //         //TODO: need path for included models
-
-    //         foreach ($models as $model) {
-    //             $this->load->model($this->modelPrefix . $model, 'includedModel');
-
-    //             $ids = [];
-
-    //             foreach ($array as $item) {
-    //                 if (isset($item->relationships[$model])) {
-    //                     $ids[] = $item->relationships[$model]['data']->id;
-    //                 }
-    //             }
-
-    //             if (count($ids) > 0) {
-    //                 $result = $this->includedModel->getMany([]'id' => implode(',', $ids)));
-
-    //                 foreach ($result['data'] as $value) {
-    //                     array_push($arr, $this->includedModel->serialize($value, false));
-    //                 }
-    //             }
-
-    //         }
-    //         return $arr;
-    //     }
-
-    //     return [];
-    // }
+                    foreach ($result as &$value) {
+                        $value = $this->$modelName->serialize($value);
+                    }
+                    
+                    $array = array_merge($array, $result, $currentIncludes);
+                }
+            }
+        }
+        return $array;
+    }
 
     public function getModelMap($alias = null): array
     {
@@ -212,7 +207,7 @@ class JSON_Model extends CI_Model
                 } else if ($param == 'page') {
                     $this->currentPage = $value;
                 } else if ($param == 'include') {
-                    // passing
+                    $this->includes = $value;
                 } else if ($param == 'between') {
                     foreach ($value as $nameCol => $val) {
                         $values = explode(',', $val);
