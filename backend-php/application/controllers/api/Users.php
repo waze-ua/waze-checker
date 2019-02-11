@@ -23,28 +23,10 @@ class Users extends Json_api
 
         $post_data = file_get_contents("php://input");
         $raw_data = json_decode($post_data);
-        // users
         $users = $raw_data->data;
 
-    
-        if (count($users) > 0) {
-            $users = array_unique($users, SORT_REGULAR);
-             print_r($users);
-            $ids = [];
-
-            foreach ($users as $user) {
-                $ids[] = $user->id;
-                if (isset($user->inactive)) {
-                    unset($user->inactive);
-                }
-               // $user->userName = $this->db->escape_str($user->userName);
-            }
-
-            $this->db->where_in('id', $ids);
-            $this->db->delete('user');
-
-            $this->db->insert_batch('user', $users);
-        }
+        $this->load->model('api/user', 'user');
+        $this->user->setDataFromWME($users);
 
         $this->output
             ->set_content_type('application/json')

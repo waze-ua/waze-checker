@@ -13,5 +13,47 @@ class Connection extends JSON_Model
 
     public $name = 'connection';
 
+    public function setDataFromWME($connections = [])
+    {
+        // direction r = 0, f = 1
+        if (count((array) $connections) > 0) {
+
+            $connectionsForSave = [];
+            $ids = [];
+            $idsTo = [];
+
+            foreach ($connections as $key => $connection) {
+                $from = (int) substr($key, 0, -1);
+                $direction = 0;
+                if (substr($key, -1) === 'f') {
+                    $direction = 1;
+                }
+
+                $ids[] = $from;
+
+                foreach ($connection as $toKey => $isAllowed) {
+                    $to = (int) substr($toKey, 0, -1);
+                    if (is_object($isAllowed)) {
+                        $isAllowed = $isAllowed->navigable;
+                    }
+                    $idsTo[] = $to;
+
+                    $connectionsForSave[] = [
+                        'fromSegment' => $from,
+                        'toSegment'   => $to,
+                        'direction'   => $direction,
+                        'isAllowed'   => $isAllowed,
+                    ];
+                }
+            }
+
+            $connectionsForSave = array_unique($connectionsForSave, SORT_REGULAR);
+
+            $this->db->where_in('fromSegment', $ids);
+            $this->db->delete('connection');
+
+            $this->db->insert_batch('connection', $connectionsForSave);
+        }
+    }
 
 }

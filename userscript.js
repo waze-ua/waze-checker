@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         WME checker
-// @version      0.11
+// @version      0.12
 // @description  checker
 // @author       ixxvivxxi
 // @include      https://www.waze.com/editor*
@@ -145,7 +145,6 @@ function startchecker() {
             await setSegments(data.segments.objects, region);
             await setStreets(data.streets.objects);
 
-
             cities.push(...data.cities.objects);
             users.push(...data.users.objects);
 
@@ -205,16 +204,10 @@ function startchecker() {
     }
 
     async function setSegments(segments, region) {
-
-        segments.forEach(segment => {
-            segment.region = region;
-        });
-
         let segments500 = chunkArray(segments, 500);
-
         await asyncForEach(segments500, async (array) => {
             await httpPOST(
-                `${url}api/segments/methods/setDataFromWME`,
+                `${url}api/segments/methods/setDataFromWME/${region}`,
                 {data: array}
             );
         });
@@ -222,18 +215,7 @@ function startchecker() {
     }
 
     async function setCities(cities) {
-        cities.forEach(city => {
-            if (city.geometry) {
-                city.lon = city.geometry.coordinates[0];
-                city.lat = city.geometry.coordinates[1];
-            } else {
-                city.lon = 0;
-                city.lat = 0;
-            }
-        });
-
        let cities500 = chunkArray(cities, 500);
-
         await asyncForEach(cities500, async (array) => {
             await httpPOST(
                 `${url}api/cities/methods/setDataFromWME`,
@@ -244,7 +226,6 @@ function startchecker() {
     }
 
     async function setStreets(streets) {
-
         let streets500 = chunkArray(streets, 500);
         await asyncForEach(streets500, async (array) => {
             await httpPOST(

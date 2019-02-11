@@ -19,7 +19,31 @@ class Street extends JSON_Model
 
     public $belongsTo = [
         'city' => [
-            'targetModel'      => 'city',
+            'targetModel' => 'city',
         ],
     ];
+
+    public function setDataFromWME($streets = [])
+    {
+        if (count($streets) > 0) {
+            $ids = [];
+
+            foreach ($streets as $key => $street) {
+                $ids[] = $street->id;
+
+                $street->city = $street->cityID;
+
+                unset($street->cityID);
+                unset($street->englishName);
+                unset($street->signText);
+                unset($street->signType);
+            }
+
+            $this->db->where_in('id', $ids);
+            $this->db->delete('street');
+
+            $this->db->insert_batch('street', $streets);
+        }
+
+    }
 }

@@ -13,6 +13,10 @@ sed -i "/'username' =>/c 'username' => '$username'," application/config/database
 sed -i "/'password' =>/c 'password' => '$password'," application/config/database.php
 sed -i "/'database' =>/c 'database' => '$database'," application/config/database.php
 sed -i "/'dbdriver' =>/c 'dbdriver' => '$dbdriver'," application/config/database.php
+
+#console utility config
+sed -i "/private \$country =/c private \$country = $countryId;" application/controllers/WmeData.php
+
 cd .. && cd ..
 cd frontend/
 npm i && ember build --environment=production

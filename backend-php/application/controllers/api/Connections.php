@@ -23,45 +23,10 @@ class Connections extends Json_api
 
         $post_data = file_get_contents("php://input");
         $raw_data = json_decode($post_data);
-
-        // direction r = 0, f = 1
         $connections = $raw_data->data;
-        if (count((array) $connections) > 0) {
 
-            $connectionsForSave = [];
-            $ids = [];
-            $idsTo = [];
-
-            foreach ($connections as $key => $connection) {
-                $from = (int) substr($key, 0, -1);
-                $direction = 0;
-                if (substr($key, -1) === 'f') {
-                    $direction = 1;
-                }
-
-                $ids[] = $from;
-
-                foreach ($connection as $toKey => $isAllowed) {
-                    $to = (int) substr($toKey, 0, -1);
-                    if (is_object($isAllowed)) {
-                        $isAllowed = $isAllowed->navigable;
-                    }
-                    $idsTo[] = $to;
-
-                    $connectionsForSave[] = [
-                        'fromSegment' => $from,
-                        'toSegment'   => $to,
-                        'direction'   => $direction,
-                        'isAllowed'   => $isAllowed,
-                    ];
-                }
-            }
-
-            $this->db->where_in('fromSegment', $ids);
-            $this->db->delete('connection');
-
-            $this->db->insert_batch('connection', $connectionsForSave);
-        }
+        $this->load->model('api/connection', 'connection');
+        $this->connection->setDataFromWME($connections);
 
         $this->output
             ->set_content_type('application/json')

@@ -26,26 +26,8 @@ class Streets extends Json_api
 
         // streets
         $streets = $raw_data->data;
-        if (count($streets) > 0) {
-            $ids = [];
-
-            foreach ($streets as $key => $street) {
-                $ids[] = $street->id;
-
-                $street->city = $street->cityID;
-
-                unset($street->cityID);
-                unset($street->englishName);
-                unset($street->signText);
-                unset($street->signType);
-            }
-
-            $this->db->where_in('id', $ids);
-            $this->db->delete('street');
-
-            $this->db->insert_batch('street', $streets);
-        }
-
+        $this->load->model('api/street', 'street');
+        $this->street->setDataFromWME($streets);
         $this->output
             ->set_content_type('application/json')
             ->set_output(json_encode(['result' => 'OK'], JSON_HEX_TAG | JSON_UNESCAPED_UNICODE));

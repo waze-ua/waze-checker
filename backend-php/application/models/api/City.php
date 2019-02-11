@@ -19,4 +19,36 @@ class City extends JSON_Model
         'lon',
     ];
 
+    public function setDataFromWME($cities = [])
+    {
+        if (count($cities) > 0) {
+            $cities = array_unique($cities, SORT_REGULAR);
+            $ids = [];
+            foreach ($cities as $city) {
+                $ids[] = $city->id;
+                $city->country = $city->countryID;
+
+                if (isset($city->geometry)) {
+                    $city->lon = $city->geometry->coordinates[0];
+                    $city->lat = $city->geometry->coordinates[1];
+                } else {
+                    $city->lon = 0;
+                    $city->lat = 0;
+                }
+
+                unset($city->englishName);
+                unset($city->geometry);
+                unset($city->countryID);
+                unset($city->permissions);
+                unset($city->rank);
+                unset($city->stateID);
+            }
+
+            $this->db->where_in('id', $ids);
+            $this->db->delete('city');
+            $this->db->insert_batch('city', $cities);
+        }
+        return;
+    }
+
 }

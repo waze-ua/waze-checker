@@ -26,27 +26,8 @@ class Cities extends Json_api
 
         // cities
         $cities = $raw_data->data;
-        if (count($cities) > 0) {
-            $cities = array_unique($cities, SORT_REGULAR);
-            $ids = [];
-            foreach ($cities as $city) {
-                $ids[] = $city->id;
-
-                $city->country = $city->countryID;
-
-                unset($city->englishName);
-                unset($city->geometry);
-                unset($city->countryID);
-                unset($city->permissions);
-                unset($city->rank);
-                unset($city->stateID);
-            }
-
-            $this->db->where_in('id', $ids);
-            $this->db->delete('city');
-
-            $this->db->insert_batch('city', $cities);
-        }
+        $this->load->model('api/city', 'city');
+        $this->city->setDataFromWME($cities);
 
         $this->output
             ->set_content_type('application/json')

@@ -1,5 +1,5 @@
 <?php
-defined('BASEPATH') OR exit('No direct script access allowed');
+defined('BASEPATH') or exit('No direct script access allowed');
 
 class Migration_Insert_bboxes extends CI_Migration
 {
@@ -11,10 +11,10 @@ class Migration_Insert_bboxes extends CI_Migration
 
     public function up()
     {
-        $json_files = $map = get_filenames('./boxes/', false);
-         foreach ($json_files as $file) {
+        $json_files = get_filenames('./boxes/', false);
+        foreach ($json_files as $file) {
             $jsonFile = read_file('./boxes/' . $file);
-            $pathinfo =  pathinfo($file);
+            $pathinfo = pathinfo($file);
             if ($pathinfo['extension'] === 'json') {
                 $bboxex = json_decode($jsonFile);
                 $this->db->insert_batch('bbox', $bboxex);
