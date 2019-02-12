@@ -43,7 +43,7 @@ class Regions extends Json_api
     {
         $this->load->model('api/region', 'region');
         $this->region->finishData($id, $country);
-        
+
         $this->output
             ->set_content_type('application/json')
             ->set_output(json_encode(['result' => 'OK'], JSON_HEX_TAG | JSON_UNESCAPED_UNICODE));
@@ -52,15 +52,19 @@ class Regions extends Json_api
     public function uploadPolygon($region = 0)
     {
         $data = ['status' => 'error'];
-        if ($_FILES['geo_data']['error'] == UPLOAD_ERR_OK && is_uploaded_file($_FILES['geo_data']['tmp_name'])) {
-            $polygon = GeoPHP::load(file_get_contents($_FILES['geo_data']['tmp_name']), 'kml');
-            $result = $this->db->query("UPDATE region SET polygon = GeomFromText('{$polygon->out('wkt')}') WHERE id = {$region}");
-            if ($result) {
-                $this->createBBoxes($region);
-                $data = ['status' => 'OK'];
-            } else {
-                $error = $this->db->error();
-                $data['message'] = $error->message;
+        $name = explode('.', $_FILES['geo_data']['name']);
+        $ext = end($name);
+        if ($ext == 'kml' || $ext == 'wkt') {
+            if ($_FILES['geo_data']['error'] == UPLOAD_ERR_OK && is_uploaded_file($_FILES['geo_data']['tmp_name'])) {
+                $polygon = GeoPHP::load(file_get_contents($_FILES['geo_data']['tmp_name']), $ext);
+                $result = $this->db->query("UPDATE region SET polygon = GeomFromText('{$polygon->out('wkt')}') WHERE id = {$region}");
+                if ($result) {
+                    $this->createBBoxes($region);
+                    $data = ['status' => 'OK'];
+                } else {
+                    $error = $this->db->error();
+                    $data['message'] = $error->message;
+                }
             }
         }
 
@@ -79,7 +83,7 @@ class Regions extends Json_api
         if ($region) {
             $data = json_decode(file_get_contents('php://input'), true);
             $coordinates = $data['coordinates'];
-            if ($coordinates[0] != $coordinates[count($coordinates) -1 ]) {
+            if ($coordinates[0] != $coordinates[count($coordinates) - 1]) {
                 $coordinates[] = $coordinates[0];
             }
             $string = implode(',', $coordinates);
