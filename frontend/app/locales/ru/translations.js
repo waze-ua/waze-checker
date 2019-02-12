@@ -19,7 +19,7 @@ export default {
 
   savePolygon: 'Сохранить полигон',
   showBBoxes: 'Показать BBoxes',
-  uploadKML: 'Загрузить KML',
+  uploadPolygon: 'Загрузить KML or WKT',
 
   save: 'Сохранить',
   remove: 'Удалить',

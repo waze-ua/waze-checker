@@ -19,7 +19,7 @@ export default {
 
   savePolygon: 'Save polygon',
   showBBoxes: 'Show BBoxes',
-  uploadKML: 'Upload KML',
+  uploadPolygon: 'Upload KML or WKT',
 
   save: 'Save',
   remove: 'Remove',

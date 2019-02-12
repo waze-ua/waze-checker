@@ -19,7 +19,7 @@ export default {
 
   savePolygon: 'Зберегти полігон',
   showBBoxes: 'Show BBoxes',
-  uploadKML: 'Upload KML',
+  uploadPolygon: 'Upload KML or WKT',
 
   save: 'Зберегти',
   remove: 'Видалити',
