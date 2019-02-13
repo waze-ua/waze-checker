@@ -131,10 +131,13 @@ class Regions extends Json_api
         if ($region->polygon) {
             $polygon = geoPHP::load($region->polygon, 'wkb');
             $bbox = $polygon->getBBox();
+            $width = $this->codexworldGetDistanceOpt($bbox['maxy'], $bbox['minx'], $bbox['maxy'], $bbox['maxx']);
+            $height = $this->codexworldGetDistanceOpt($bbox['maxy'], $bbox['minx'], $bbox['miny'], $bbox['minx']);
+            $stepX = ($bbox['maxx'] - $bbox['minx']) / ($width / 6.2);
+            $stepY = ($bbox['maxy'] - $bbox['miny']) / ($height / 6.2);
+
             $bboxes = [];
             $x = $bbox['minx'];
-            $stepX = 0.15;
-            $stepY = 0.1;
             while ($x <= $bbox['maxx']) {
                 $y = $bbox['miny'];
                 $west = $x;
@@ -184,7 +187,16 @@ class Regions extends Json_api
                 $x = $x + $stepX;
             }
 
-            //echo count($bboxes);
+            if (count($bboxes) == 0) {
+                $bboxes[] = [
+                    'south'  => $bbox['miny'],
+                    'north'  => $bbox['maxy'],
+                    'west'   => $bbox['minx'],
+                    'east'   => $bbox['maxx'],
+                    'region' => $id,
+                ];
+            }
+
             if (count($bboxes) > 0) {
                 $this->db->insert_batch('bbox', $bboxes);
             }
@@ -192,6 +204,17 @@ class Regions extends Json_api
         } else {
             $data = null;
         }
+    }
+
+    public function codexworldGetDistanceOpt($latitudeFrom, $longitudeFrom, $latitudeTo, $longitudeTo)
+    {
+        $rad = M_PI / 180;
+        $theta = $longitudeFrom - $longitudeTo;
+        $dist = sin($latitudeFrom * $rad)
+         * sin($latitudeTo * $rad) + cos($latitudeFrom * $rad)
+         * cos($latitudeTo * $rad) * cos($theta * $rad);
+
+        return acos($dist) / $rad * 60 * 1.853;
     }
 
 }
