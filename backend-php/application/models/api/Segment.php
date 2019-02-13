@@ -2,8 +2,8 @@
 defined('BASEPATH') or exit('No direct script access allowed');
 require_once APPPATH . 'libraries/JSON_Model.php';
 
-use Phayes\GeoPHP\Adapters\GeoHash;
 use Phayes\GeoPHP\GeoPHP;
+use Phayes\GeoPHP\Adapters\GeoHash;
 
 class Segment extends JSON_Model
 {
@@ -258,15 +258,20 @@ class Segment extends JSON_Model
                     $coordinates[] = implode(' ', $coordinate);
                 }
                 $coordinates = implode(',', $coordinates);
-
                 $lineString = GeoPHP::load("LINESTRING({$coordinates})", 'wkt');
 
                 if ($regionGeometry->pointInPolygon($lineString->startPoint())) {
                     $ids[] = $segment->id;
 
-                    $centroid = $lineString->getCentroid();
-                    $segment->lon = $centroid->getX();
-                    $segment->lat = $centroid->getY();
+                    if ($segment->length > 500) {
+                        $centroid = $lineString->getCentroid();
+                        $segment->lon = $centroid->getX();
+                        $segment->lat = $centroid->getY();
+                    } else {
+                        $startPoint = $lineString->startPoint();
+                        $segment->lon = $startPoint->getX();
+                        $segment->lat = $startPoint->getY();
+                    }
 
                     if ($segment->fwdMaxSpeed === null) {
                         $segment->fwdMaxSpeed = 0;
@@ -330,8 +335,8 @@ class Segment extends JSON_Model
                         'updatedOn'             => $segment->updatedOn,
                         'validated'             => $segment->validated,
                         'coordinates'           => null,
-                        'lon'                   => $centroid->getX(),
-                        'lat'                   => $centroid->getY(),
+                        'lon'                   => $segment->lon,
+                        'lat'                   => $segment->lat,
                         'hasTransition'         => 0,
                         'startPoint'            => $GeoHash->write($lineString->startPoint()),
                         'endPoint'              => $GeoHash->write($lineString->endPoint()),
