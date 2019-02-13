@@ -129,12 +129,12 @@ class Json_api extends CI_Controller
 
     public function POST_items($data)
     {
-        $this->checkAuthorization();
+        //$this->checkAuthorization();
+        $this->loadModel($this->modelName);
         $data2 = $this->mainModel->deserialize($data);
         $id = $this->mainModel->create($data2);
 
         if ($id) {
-            $this->mainModel->saveRelationShips($data, $id);
             return $this->GET_item($id);
         }
 
