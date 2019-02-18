@@ -15,6 +15,7 @@ class Connection extends JSON_Model
 
     public function setDataFromWME($connections = [])
     {
+        set_time_limit(0);
         // direction r = 0, f = 1
         if (count((array) $connections) > 0) {
 

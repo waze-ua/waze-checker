@@ -243,6 +243,7 @@ class Segment extends JSON_Model
 
     public function setDataFromWME($segments = [], $regionId)
     {
+        set_time_limit(0);
         $GeoHash = new GeoHash();
         if (count($segments) > 0) {
             $ids = [];

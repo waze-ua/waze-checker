@@ -20,7 +20,7 @@ class Region extends JSON_Model
 
     public function finishData($id, $country)
     {
-        set_time_limit(300);
+        set_time_limit(0);
         $region = $id;
         $this->load->driver('cache', ['adapter' => 'file']);
 
