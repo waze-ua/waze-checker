@@ -48,8 +48,6 @@ class Connection extends JSON_Model
                 }
             }
 
-            $connectionsForSave = array_unique($connectionsForSave, SORT_REGULAR);
-
             $this->db->where_in('fromSegment', $ids);
             $this->db->delete('connection');
 
