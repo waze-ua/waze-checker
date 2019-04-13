@@ -34,7 +34,7 @@ export default {
     speedMore90InCity: 'Більше ніж 90 км/год у місті',
     withLowLock: 'Сегмент з низьким рівнем блокування',
     notConnected: 'Не приєднані сегменти',
-    withoutTurn: 'Segments without turns',
+    withoutTurns: 'Segments without turns',
     short: 'Короткий сегмент',
     withNameWithoutCity: 'Сегменти з ім\'ям але без назви НП',
     unpaved: 'Сегменти поганої дороги',

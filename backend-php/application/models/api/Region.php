@@ -35,10 +35,29 @@ class Region extends JSON_Model
         JOIN city ON city.id = street.city
         WHERE city.country != {$country}");
 
-        $this->db->query("UPDATE segment SET notConnected = 1 WHERE segment.region = {$region} 
-          AND segment.id NOT IN (SELECT c.fromSegment 
-          FROM connection c 
+        $this->db->query("UPDATE segment SET segment.notConnected = 1
+        WHERE segment.region = {$region} AND segment.id NOT IN
+        (SELECT c.fromSegment
+          FROM connection c
           WHERE c.fromSegment = segment.id)");
+
+        $query = $this->db->query("(SELECT c.fromSegment id FROM connection c 
+            JOIN segment ON segment.id = c.toSegment 
+            WHERE c.isAllowed = 0 AND c.direction = 1 AND segment.fwdDirection = 1 AND segment.region = {$region})
+          UNION ALL
+          (SELECT c.fromSegment id FROM connection c 
+            JOIN segment ON segment.id = c.toSegment 
+            WHERE c.isAllowed = 0 AND c.direction = 0 AND segment.revDirection = 1 AND segment.region = {$region})");
+     
+        $ids = array_map(function ($item) {
+            return $item->id;
+        }, $query->result());
+
+        if (count($ids) > 0) {
+            $this->db->set(['withoutTurns' => 1]);
+            $this->db->where_in('id', $ids);
+            $this->db->update('segment');
+        }
 
         $this->db->query("UPDATE user
         JOIN (
@@ -74,18 +93,19 @@ class Region extends JSON_Model
         $amounts = $this->segment->getAmounts($region);
 
         $this->db->insert('statistic', ['region' => $id, 'date' => $date->format('Y-m-d'), 'type' => 'all', 'value' => $amounts['all']]);
-        $this->db->insert('statistic', ['region' => $id, 'date' => $date->format('Y-m-d'), 'type' => 'all', 'value' => $amounts['length']]);
-        $this->db->insert('statistic', ['region' => $id, 'date' => $date->format('Y-m-d'), 'type' => 'all', 'value' => $amounts['withoutSpeed']]);
-        $this->db->insert('statistic', ['region' => $id, 'date' => $date->format('Y-m-d'), 'type' => 'all', 'value' => $amounts['speedMore90InCity']]);
-        $this->db->insert('statistic', ['region' => $id, 'date' => $date->format('Y-m-d'), 'type' => 'all', 'value' => $amounts['withLowLock']]);
-        $this->db->insert('statistic', ['region' => $id, 'date' => $date->format('Y-m-d'), 'type' => 'all', 'value' => $amounts['withoutTurn']]);
-        $this->db->insert('statistic', ['region' => $id, 'date' => $date->format('Y-m-d'), 'type' => 'all', 'value' => $amounts['short']]);
-        $this->db->insert('statistic', ['region' => $id, 'date' => $date->format('Y-m-d'), 'type' => 'all', 'value' => $amounts['withNameWithoutCity']]);
-        $this->db->insert('statistic', ['region' => $id, 'date' => $date->format('Y-m-d'), 'type' => 'all', 'value' => $amounts['unpaved']]);
-        $this->db->insert('statistic', ['region' => $id, 'date' => $date->format('Y-m-d'), 'type' => 'all', 'value' => $amounts['withAverageSpeedCamera']]);
-        $this->db->insert('statistic', ['region' => $id, 'date' => $date->format('Y-m-d'), 'type' => 'all', 'value' => $amounts['new']]);
-        $this->db->insert('statistic', ['region' => $id, 'date' => $date->format('Y-m-d'), 'type' => 'all', 'value' => $amounts['revDirection']]);
-        $this->db->insert('statistic', ['region' => $id, 'date' => $date->format('Y-m-d'), 'type' => 'all', 'value' => $amounts['toll']]);
+        $this->db->insert('statistic', ['region' => $id, 'date' => $date->format('Y-m-d'), 'type' => 'length', 'value' => $amounts['length']]);
+        $this->db->insert('statistic', ['region' => $id, 'date' => $date->format('Y-m-d'), 'type' => 'withoutSpeed', 'value' => $amounts['withoutSpeed']]);
+        $this->db->insert('statistic', ['region' => $id, 'date' => $date->format('Y-m-d'), 'type' => 'speedMore90InCity', 'value' => $amounts['speedMore90InCity']]);
+        $this->db->insert('statistic', ['region' => $id, 'date' => $date->format('Y-m-d'), 'type' => 'withLowLock', 'value' => $amounts['withLowLock']]);
+        $this->db->insert('statistic', ['region' => $id, 'date' => $date->format('Y-m-d'), 'type' => 'awithoutTurnsll', 'value' => $amounts['withoutTurns']]);
+        $this->db->insert('statistic', ['region' => $id, 'date' => $date->format('Y-m-d'), 'type' => 'notConnected', 'value' => $amounts['notConnected']]);
+        $this->db->insert('statistic', ['region' => $id, 'date' => $date->format('Y-m-d'), 'type' => 'short', 'value' => $amounts['short']]);
+        $this->db->insert('statistic', ['region' => $id, 'date' => $date->format('Y-m-d'), 'type' => 'withNameWithoutCity', 'value' => $amounts['withNameWithoutCity']]);
+        $this->db->insert('statistic', ['region' => $id, 'date' => $date->format('Y-m-d'), 'type' => 'unpaved', 'value' => $amounts['unpaved']]);
+        $this->db->insert('statistic', ['region' => $id, 'date' => $date->format('Y-m-d'), 'type' => 'withAverageSpeedCamera', 'value' => $amounts['withAverageSpeedCamera']]);
+        $this->db->insert('statistic', ['region' => $id, 'date' => $date->format('Y-m-d'), 'type' => 'new', 'value' => $amounts['new']]);
+        $this->db->insert('statistic', ['region' => $id, 'date' => $date->format('Y-m-d'), 'type' => 'revDirection', 'value' => $amounts['revDirection']]);
+        $this->db->insert('statistic', ['region' => $id, 'date' => $date->format('Y-m-d'), 'type' => 'toll', 'value' => $amounts['toll']]);
 
         $this->cache->delete("region_{$region}");
 

@@ -99,8 +99,8 @@ export default Component.extend(QueryMixin, {
       };
     }
 
-    if (type == 'withoutTurn') {
-      return null;
+    if (type == 'withoutTurns') {
+      return 'withoutTurns:1';
     }
 
     if (type == 'notConnected') {

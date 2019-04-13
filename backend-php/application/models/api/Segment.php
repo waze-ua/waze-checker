@@ -81,7 +81,7 @@ class Segment extends JSON_Model
             'withoutSpeed' => 0,
             'speedMore90InCity' => 0,
             'withLowLock' => 0,
-            'withoutTurn' => 0,
+            'withoutTurns' => 0,
             'notConnected' => 0,
             'short' => 0,
             'withNameWithoutCity' => 0,
@@ -144,15 +144,15 @@ class Segment extends JSON_Model
             $result['withLowLock'] = $row->amount;
         }
 
-        //withoutTurn
-        // $this->db->select('count(s.id) amount');
-        // $this->db->from('segment s');
-        // $this->db->where("s.region = {$region} AND (SELECT count(connection.id) FROM connection WHERE connection.fromSegment = s.id AND connection.isAllowed = 0 AND ((s.fwdDirection = 1 AND connection.direction = 1) OR (s.revDirection = 1 AND connection.direction = 0 ))) > 0");
-        // $query = $this->db->get();
-        // $row = $query->row();
-        // if (isset($row)) {
-        //     $result['withoutTurn'] = $row->amount;
-        // }
+        //withoutTurns
+        $this->db->select('count(s.id) amount');
+        $this->db->from('segment s');
+        $this->db->where("s.region = {$region} AND s.withoutTurns = 1");
+        $query = $this->db->get();
+        $row = $query->row();
+        if (isset($row)) {
+            $result['withoutTurns'] = $row->amount;
+        }
 
         //notConnected
         $this->db->select('count(s.id) amount');

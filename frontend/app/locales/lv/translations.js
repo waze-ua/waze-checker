@@ -34,7 +34,7 @@ export default {
     speedMore90InCity: 'More than 90 km/h in a city',
     withLowLock: 'Segments with low lock',
     notConnected: 'Not connected',
-    withoutTurn: 'Segments without turns',
+    withoutTurns: 'Segments without turns',
     short: 'Short segments',
     withNameWithoutCity: 'Segments with name but without city',
     unpaved: 'Unpaved segments',

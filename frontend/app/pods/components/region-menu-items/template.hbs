@@ -61,15 +61,15 @@
   {{t 'segments.notConnected'}}
 {{/link-to}}
 
-{{#link-to 'region.segments' region.id (query-params type='withoutTurn' page=1) class="item" }}
+{{#link-to 'region.segments' region.id (query-params type='withoutTurns' page=1) class="item" }}
   <div class="ui small teal label">
     {{#if fetchAmounts.isRunning}}
       <i class="spinner loading icon"></i>
     {{else}}
-      {{amounts.withoutTurn}}
+      {{amounts.withoutTurns}}
     {{/if}}
   </div>
-  {{t 'segments.withoutTurn'}}
+  {{t 'segments.withoutTurns'}}
 {{/link-to}}
 
 {{#link-to 'region.segments' region.id (query-params type='short' page=1) class="item" }}

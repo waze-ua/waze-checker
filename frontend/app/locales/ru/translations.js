@@ -34,7 +34,7 @@ export default {
     speedMore90InCity: 'Более 90 км/ч в городе',
     withLowLock: 'Недостаточный уроверь блокировки',
     notConnected: 'Сегменты не подсоединены',
-    withoutTurn: 'Запрещенные повороты',
+    withoutTurns: 'Запрещенные повороты',
     short: 'Короткие сегменты',
     withNameWithoutCity: 'С улицей, но без НП',
     unpaved: 'Сегменты без покрытия',
