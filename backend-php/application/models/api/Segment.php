@@ -47,50 +47,49 @@ class Segment extends JSON_Model
         'lat',
         'lon',
         'hasTransition',
-
+        'notConnected',
     ];
 
     public $belongsTo = [
-        'street'    => [
+        'street' => [
             'targetModel' => 'street',
         ],
-        'roadType'  => [
+        'roadType' => [
             'targetModel' => 'road_type',
         ],
         'updatedBy' => [
             'targetModel' => 'user',
         ],
-        'region'    => [
+        'region' => [
             'targetModel' => 'region',
         ],
     ];
 
-    public $hasMany = [
-        'connections' => [
-            'targetModel' => 'connection',
-            'joinColumn'  => 'fromSegment',
-        ],
+    // public $hasMany = [
+    //     'connections' => [
+    //         'targetModel' => 'connection',
+    //         'joinColumn' => 'fromSegment',
+    //     ],
 
-    ];
+    // ];
 
     public function getAmounts($region)
     {
         $result = array(
-            'all'                    => 0,
-            'length'                 => 0,
-            'withoutSpeed'           => 0,
-            'speedMore90InCity'      => 0,
-            'withLowLock'            => 0,
-            'withoutTurn'            => 0,
-            'notConnected'           => 0,
-            'short'                  => 0,
-            'withNameWithoutCity'    => 0,
-            'unpaved'                => 0,
+            'all' => 0,
+            'length' => 0,
+            'withoutSpeed' => 0,
+            'speedMore90InCity' => 0,
+            'withLowLock' => 0,
+            'withoutTurn' => 0,
+            'notConnected' => 0,
+            'short' => 0,
+            'withNameWithoutCity' => 0,
+            'unpaved' => 0,
             'withAverageSpeedCamera' => 0,
-            'new'                    => 0,
-            'revDirection'           => 0,
-            'toll'                   => 0,
-
+            'new' => 0,
+            'revDirection' => 0,
+            'toll' => 0,
         );
 
         //all
@@ -146,25 +145,24 @@ class Segment extends JSON_Model
         }
 
         //withoutTurn
-        $this->db->select('count(s.id) amount');
-        $this->db->from('segment s');
-        $this->db->where("s.region = {$region} AND (SELECT count(connection.id) FROM connection WHERE connection.fromSegment = s.id AND connection.isAllowed = 0 AND ((s.fwdDirection = 1 AND connection.direction = 1) OR (s.revDirection = 1 AND connection.direction = 0 ))) > 0");
-        $query = $this->db->get();
-        $row = $query->row();
-        if (isset($row)) {
-            $result['withoutTurn'] = $row->amount;
-        }
-
-        // //notConnected
-        // $this->db->select('count(segment.id) amount');
-        // $this->db->from('segments');
-        // $this->db->join('region_segments', 'region_segment.segment = segment.id');
-        // $this->db->where("region_segment.region = {$region} AND (SELECT count(connection.id) FROM connections WHERE connection.fromSegment = segment.id OR connection.toSegment = segment.id) > 0");
+        // $this->db->select('count(s.id) amount');
+        // $this->db->from('segment s');
+        // $this->db->where("s.region = {$region} AND (SELECT count(connection.id) FROM connection WHERE connection.fromSegment = s.id AND connection.isAllowed = 0 AND ((s.fwdDirection = 1 AND connection.direction = 1) OR (s.revDirection = 1 AND connection.direction = 0 ))) > 0");
         // $query = $this->db->get();
         // $row = $query->row();
         // if (isset($row)) {
-        //     $result['notConnected'] = $row->amount;
+        //     $result['withoutTurn'] = $row->amount;
         // }
+
+        //notConnected
+        $this->db->select('count(s.id) amount');
+        $this->db->from('segment s');
+        $this->db->where("s.region = {$region} AND s.notConnected = 1");
+        $query = $this->db->get();
+        $row = $query->row();
+        if (isset($row)) {
+            $result['notConnected'] = $row->amount;
+        }
 
         //short
         $this->db->select('count(s.id) amount');
@@ -303,45 +301,45 @@ class Segment extends JSON_Model
                     }
 
                     $segmentsForSave[] = [
-                        'id'                    => $segment->id,
-                        'allowNoDirection'      => $segment->allowNoDirection,
-                        'createdBy'             => $segment->createdBy,
-                        'createdOn'             => $segment->createdOn,
-                        'flags'                 => $segment->flags,
-                        'fromNodeId'            => $segment->fromNodeID,
-                        'fwdDirection'          => $segment->fwdDirection,
-                        'fwdFlags'              => $segment->fwdFlags,
-                        'fwdMaxSpeed'           => $segment->fwdMaxSpeed,
+                        'id' => $segment->id,
+                        'allowNoDirection' => $segment->allowNoDirection,
+                        'createdBy' => $segment->createdBy,
+                        'createdOn' => $segment->createdOn,
+                        'flags' => $segment->flags,
+                        'fromNodeId' => $segment->fromNodeID,
+                        'fwdDirection' => $segment->fwdDirection,
+                        'fwdFlags' => $segment->fwdFlags,
+                        'fwdMaxSpeed' => $segment->fwdMaxSpeed,
                         'fwdMaxSpeedUnverified' => $segment->fwdMaxSpeedUnverified,
-                        'fwdToll'               => $segment->fwdToll,
-                        'fwdTurnsLocked'        => $segment->fwdTurnsLocked,
-                        'hasClosures'           => $segment->hasClosures,
-                        'hasHNs'                => $segment->hasHNs,
-                        'length'                => $segment->length,
-                        'level'                 => $segment->level,
-                        'lockRank'              => $segment->lockRank,
-                        'street'                => $segment->primaryStreetID,
-                        'rank'                  => $segment->rank,
-                        'revDirection'          => $segment->revDirection,
-                        'revFlags'              => $segment->revFlags,
-                        'revMaxSpeed'           => $segment->revMaxSpeed,
+                        'fwdToll' => $segment->fwdToll,
+                        'fwdTurnsLocked' => $segment->fwdTurnsLocked,
+                        'hasClosures' => $segment->hasClosures,
+                        'hasHNs' => $segment->hasHNs,
+                        'length' => $segment->length,
+                        'level' => $segment->level,
+                        'lockRank' => $segment->lockRank,
+                        'street' => $segment->primaryStreetID,
+                        'rank' => $segment->rank,
+                        'revDirection' => $segment->revDirection,
+                        'revFlags' => $segment->revFlags,
+                        'revMaxSpeed' => $segment->revMaxSpeed,
                         'revMaxSpeedUnverified' => $segment->revMaxSpeedUnverified,
-                        'revToll'               => $segment->revToll,
-                        'revTurnsLocked'        => $segment->revTurnsLocked,
-                        'roadType'              => $segment->roadType,
-                        'routingRoadType'       => $segment->routingRoadType,
-                        'separator'             => $segment->separator,
-                        'toNodeId'              => $segment->toNodeID,
-                        'updatedBy'             => $segment->updatedBy,
-                        'updatedOn'             => $segment->updatedOn,
-                        'validated'             => $segment->validated,
-                        'coordinates'           => null,
-                        'lon'                   => $segment->lon,
-                        'lat'                   => $segment->lat,
-                        'hasTransition'         => 0,
-                        'startPoint'            => $GeoHash->write($lineString->startPoint()),
-                        'endPoint'              => $GeoHash->write($lineString->endPoint()),
-                        'region'                => $regionId,
+                        'revToll' => $segment->revToll,
+                        'revTurnsLocked' => $segment->revTurnsLocked,
+                        'roadType' => $segment->roadType,
+                        'routingRoadType' => $segment->routingRoadType,
+                        'separator' => $segment->separator,
+                        'toNodeId' => $segment->toNodeID,
+                        'updatedBy' => $segment->updatedBy,
+                        'updatedOn' => $segment->updatedOn,
+                        'validated' => $segment->validated,
+                        'coordinates' => null,
+                        'lon' => $segment->lon,
+                        'lat' => $segment->lat,
+                        'hasTransition' => 0,
+                        'startPoint' => $GeoHash->write($lineString->startPoint()),
+                        'endPoint' => $GeoHash->write($lineString->endPoint()),
+                        'region' => $regionId,
                     ];
                 }
             }

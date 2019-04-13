@@ -16,6 +16,7 @@ export default DS.Model.extend({
 
   fwdMaxSpeed: DS.attr('number'),
   revMaxSpeed: DS.attr('number'),
+  notConnected: DS.attr('boolean'),
 
   updatedBy: DS.belongsTo('user'),
   street: DS.belongsTo('street'),

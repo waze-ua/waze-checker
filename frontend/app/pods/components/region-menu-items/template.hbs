@@ -50,6 +50,17 @@
   {{t 'segments.withLowLock'}}
 {{/link-to}}
 
+{{#link-to 'region.segments' region.id (query-params type='notConnected' page=1) class="item" }}
+  <div class="ui small teal label">
+    {{#if fetchAmounts.isRunning}}
+      <i class="spinner loading icon"></i>
+    {{else}}
+      {{amounts.notConnected}}
+    {{/if}}
+  </div>
+  {{t 'segments.notConnected'}}
+{{/link-to}}
+
 {{#link-to 'region.segments' region.id (query-params type='withoutTurn' page=1) class="item" }}
   <div class="ui small teal label">
     {{#if fetchAmounts.isRunning}}

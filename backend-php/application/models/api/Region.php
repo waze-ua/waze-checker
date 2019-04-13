@@ -35,6 +35,11 @@ class Region extends JSON_Model
         JOIN city ON city.id = street.city
         WHERE city.country != {$country}");
 
+        $this->db->query("UPDATE segment SET notConnected = 1 WHERE segment.region = {$region} 
+          AND segment.id NOT IN (SELECT c.fromSegment 
+          FROM connection c 
+          WHERE c.fromSegment = segment.id)");
+
         $this->db->query("UPDATE user
         JOIN (
           SELECT g.userId userId, MAX(g.dt) value FROM (

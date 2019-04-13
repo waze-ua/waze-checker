@@ -104,7 +104,7 @@ export default Component.extend(QueryMixin, {
     }
 
     if (type == 'notConnected') {
-      return null;
+      return 'notConnected:1';
     }
 
     if (type == 'short') {
