@@ -6,6 +6,7 @@ rm -rf dist/*
 rsync -r backend-php/ dist/api/ --exclude vendor
 cd dist/api/
 composer install --no-dev
+rm -rf vendor/codeigniter/framework/user_guide
 
 #database config
 sed -i "/'hostname' =>/c 'hostname' => '$hostname'," application/config/database.php
