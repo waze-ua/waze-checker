@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         WME checker
-// @version      0.12
+// @version      0.13
 // @description  checker
 // @author       ixxvivxxi
 // @include      https://www.waze.com/editor*
@@ -78,7 +78,6 @@ function startchecker() {
         new WazeWrap.Interface.Tab(`Checker ${identifier}`, tabContent);
 
         showRegions();
-
     }
 
     function showRegions() {
@@ -137,7 +136,7 @@ function startchecker() {
             let data = await httpGet(
                 `/row-Descartes/app/Features?
                   language=en&bbox=${box.west},${box.south},${box.east},${box.north}
-                  &roadTypes=1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22`)
+                  &roadTypes=1,2,3,4,6,7,8,9,11,12,13,14,15,17,19,20,21,22`)
                 .then(response => response.json());
 
             // let data = JSON.parse(json);
