@@ -2,8 +2,8 @@
 defined('BASEPATH') or exit('No direct script access allowed');
 require_once APPPATH . 'libraries/JSON_Model.php';
 
-use Phayes\GeoPHP\GeoPHP;
 use Phayes\GeoPHP\Adapters\GeoHash;
+use Phayes\GeoPHP\GeoPHP;
 
 class Segment extends JSON_Model
 {
@@ -83,6 +83,7 @@ class Segment extends JSON_Model
             'withLowLock' => 0,
             'withoutTurns' => 0,
             'notConnected' => 0,
+            'hasIntersection' => 0,
             'short' => 0,
             'withNameWithoutCity' => 0,
             'unpaved' => 0,
@@ -162,6 +163,16 @@ class Segment extends JSON_Model
         $row = $query->row();
         if (isset($row)) {
             $result['notConnected'] = $row->amount;
+        }
+
+        //hasIntersection
+        $this->db->select('count(s.id) amount');
+        $this->db->from('segment s');
+        $this->db->where("s.region = {$region} AND s.hasIntersection = 1");
+        $query = $this->db->get();
+        $row = $query->row();
+        if (isset($row)) {
+            $result['hasIntersection'] = $row->amount;
         }
 
         //short
@@ -246,6 +257,7 @@ class Segment extends JSON_Model
         if (count($segments) > 0) {
             $ids = [];
             $segmentsForSave = [];
+            $geometries = [];
 
             $this->db->select('AsBinary(polygon) polygon');
             $this->db->where(['id' => $regionId]);
@@ -272,73 +284,45 @@ class Segment extends JSON_Model
                         $segment->lat = $startPoint->getY();
                     }
 
-                    if ($segment->fwdMaxSpeed === null) {
-                        $segment->fwdMaxSpeed = 0;
-                    }
-
-                    if ($segment->revMaxSpeed === null) {
-                        $segment->revMaxSpeed = 0;
-                    }
-
-                    if ($segment->routingRoadType === null) {
-                        $segment->routingRoadType = 0;
-                    }
-
-                    if ($segment->primaryStreetID === null) {
-                        $segment->primaryStreetID = 0;
-                    }
-
-                    if ($segment->lockRank === null) {
-                        $segment->lockRank = 0;
-                    }
-
-                    if ($segment->updatedOn === null) {
-                        $segment->updatedOn = 0;
-                    }
-
-                    if ($segment->createdOn === null) {
-                        $segment->createdOn = 0;
-                    }
-
                     $segmentsForSave[] = [
                         'id' => $segment->id,
-                        'allowNoDirection' => $segment->allowNoDirection,
-                        'createdBy' => $segment->createdBy,
-                        'createdOn' => $segment->createdOn,
-                        'flags' => $segment->flags,
-                        'fromNodeId' => $segment->fromNodeID,
-                        'fwdDirection' => $segment->fwdDirection,
-                        'fwdFlags' => $segment->fwdFlags,
-                        'fwdMaxSpeed' => $segment->fwdMaxSpeed,
-                        'fwdMaxSpeedUnverified' => $segment->fwdMaxSpeedUnverified,
-                        'fwdToll' => $segment->fwdToll,
-                        'fwdTurnsLocked' => $segment->fwdTurnsLocked,
-                        'hasClosures' => $segment->hasClosures,
-                        'hasHNs' => $segment->hasHNs,
-                        'length' => $segment->length,
-                        'level' => $segment->level,
-                        'lockRank' => $segment->lockRank,
-                        'street' => $segment->primaryStreetID,
-                        'rank' => $segment->rank,
-                        'revDirection' => $segment->revDirection,
-                        'revFlags' => $segment->revFlags,
-                        'revMaxSpeed' => $segment->revMaxSpeed,
-                        'revMaxSpeedUnverified' => $segment->revMaxSpeedUnverified,
-                        'revToll' => $segment->revToll,
-                        'revTurnsLocked' => $segment->revTurnsLocked,
-                        'roadType' => $segment->roadType,
-                        'routingRoadType' => $segment->routingRoadType,
-                        'separator' => $segment->separator,
-                        'toNodeId' => $segment->toNodeID,
-                        'updatedBy' => $segment->updatedBy,
-                        'updatedOn' => $segment->updatedOn,
-                        'validated' => $segment->validated,
-                        'coordinates' => null,
-                        'lon' => $segment->lon,
-                        'lat' => $segment->lat,
+                        'allowNoDirection' => (int) $segment->allowNoDirection,
+                        'createdBy' => (int) $segment->createdBy,
+                        'createdOn' => (int) $segment->createdOn,
+                        'flags' => (int) $segment->flags,
+                        'fromNodeId' => (int) $segment->fromNodeID,
+                        'fwdDirection' => (int) $segment->fwdDirection,
+                        'fwdFlags' => (int) $segment->fwdFlags,
+                        'fwdMaxSpeed' => (int) $segment->fwdMaxSpeed,
+                        'fwdMaxSpeedUnverified' => (int) $segment->fwdMaxSpeedUnverified,
+                        'fwdToll' => (int) $segment->fwdToll,
+                        'fwdTurnsLocked' => (int) $segment->fwdTurnsLocked,
+                        'hasClosures' => (int) $segment->hasClosures,
+                        'hasHNs' => (int) $segment->hasHNs,
+                        'length' => (int) $segment->length,
+                        'level' => (int) $segment->level,
+                        'lockRank' => (int) $segment->lockRank,
+                        'street' => (int) $segment->primaryStreetID,
+                        'rank' => (int) $segment->rank,
+                        'revDirection' => (int) $segment->revDirection,
+                        'revFlags' => (int) $segment->revFlags,
+                        'revMaxSpeed' => (int) $segment->revMaxSpeed,
+                        'revMaxSpeedUnverified' => (int) $segment->revMaxSpeedUnverified,
+                        'revToll' => (int) $segment->revToll,
+                        'revTurnsLocked' => (int) $segment->revTurnsLocked,
+                        'roadType' => (int) $segment->roadType,
+                        'routingRoadType' => (int) $segment->routingRoadType,
+                        '`separator`' => (int) $segment->separator,
+                        'toNodeId' => (int) $segment->toNodeID,
+                        'updatedBy' => (int) $segment->updatedBy,
+                        'updatedOn' => (int) $segment->updatedOn,
+                        'validated' => (int) $segment->validated,
+                        'coordinates' => "GeomFromText('{$lineString->out('wkt')}')",
+                        'startPoint' => "'{$GeoHash->write($lineString->startPoint(), 0.0001)}'",
+                        'endPoint' => "'{$GeoHash->write($lineString->endPoint(), 0.0001)}'",
+                        'lon' => "'{$segment->lon}'",
+                        'lat' => "'{$segment->lat}'",
                         'hasTransition' => 0,
-                        'startPoint' => $GeoHash->write($lineString->startPoint()),
-                        'endPoint' => $GeoHash->write($lineString->endPoint()),
                         'region' => $regionId,
                     ];
                 }
@@ -346,7 +330,27 @@ class Segment extends JSON_Model
             if (count($ids) > 0) {
                 $this->db->where_in('id', $ids);
                 $this->db->delete('segment');
-                $this->db->insert_batch('segment', $segmentsForSave);
+
+                $this->db->insert_batch('segment', $segmentsForSave, false);
+                $idsStr = implode(',', $ids);
+
+                $query = $this->db->query("SELECT s1.id id FROM `segment` s1
+                JOIN `segment` s2 ON s1.id < s2.id
+                WHERE s1.startPoint != s2.startPoint AND s1.startPoint != s2.endPoint AND s1.endPoint != s2.startPoint AND s1.endPoint != s2.endPoint AND s1.`level` = s2.`level`
+                AND ST_Intersects(s1.`coordinates`, s2.`coordinates`)
+                AND s1.id IN ({$idsStr})
+                AND s2.id IN ({$idsStr})");
+                $result = $query->result();
+
+                if (count($result) > 0) {
+                    $ids = array_map(function ($item) {
+                        return $item->id;
+                    }, $result);
+
+                    $this->db->set(['hasIntersection' => 1]);
+                    $this->db->where_in('id', $ids);
+                    $this->db->update('segment');
+                }
             }
         }
     }

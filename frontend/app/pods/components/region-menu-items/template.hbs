@@ -72,6 +72,17 @@
   {{t 'segments.withoutTurns'}}
 {{/link-to}}
 
+{{#link-to 'region.segments' region.id (query-params type='hasIntersection' page=1) class="item" }}
+  <div class="ui small teal label">
+    {{#if fetchAmounts.isRunning}}
+      <i class="spinner loading icon"></i>
+    {{else}}
+      {{amounts.hasIntersection}}
+    {{/if}}
+  </div>
+  {{t 'segments.hasIntersection'}}
+{{/link-to}}
+
 {{#link-to 'region.segments' region.id (query-params type='short' page=1) class="item" }}
   <div class="ui small teal label">
     {{#if fetchAmounts.isRunning}}

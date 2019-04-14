@@ -35,6 +35,7 @@ export default {
     withLowLock: 'Segments with low lock',
     notConnected: 'Not connected',
     withoutTurns: 'Segments without turns',
+    hasIntersection : 'Has intersection',
     short: 'Short segments',
     withNameWithoutCity: 'Segments with name but without city',
     unpaved: 'Unpaved segments',

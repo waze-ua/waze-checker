@@ -35,6 +35,7 @@ export default {
     withLowLock: 'Недостаточный уроверь блокировки',
     notConnected: 'Сегменты не подсоединены',
     withoutTurns: 'Запрещенные повороты',
+    hasIntersection : 'Пересечения',
     short: 'Короткие сегменты',
     withNameWithoutCity: 'С улицей, но без НП',
     unpaved: 'Сегменты без покрытия',

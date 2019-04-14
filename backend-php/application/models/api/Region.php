@@ -96,6 +96,7 @@ class Region extends JSON_Model
         $this->db->insert('statistic', ['region' => $id, 'date' => $date->format('Y-m-d'), 'type' => 'length', 'value' => $amounts['length']]);
         $this->db->insert('statistic', ['region' => $id, 'date' => $date->format('Y-m-d'), 'type' => 'withoutSpeed', 'value' => $amounts['withoutSpeed']]);
         $this->db->insert('statistic', ['region' => $id, 'date' => $date->format('Y-m-d'), 'type' => 'speedMore90InCity', 'value' => $amounts['speedMore90InCity']]);
+        $this->db->insert('statistic', ['region' => $id, 'date' => $date->format('Y-m-d'), 'type' => 'hasIntersection', 'value' => $amounts['hasIntersection']]);
         $this->db->insert('statistic', ['region' => $id, 'date' => $date->format('Y-m-d'), 'type' => 'withLowLock', 'value' => $amounts['withLowLock']]);
         $this->db->insert('statistic', ['region' => $id, 'date' => $date->format('Y-m-d'), 'type' => 'awithoutTurnsll', 'value' => $amounts['withoutTurns']]);
         $this->db->insert('statistic', ['region' => $id, 'date' => $date->format('Y-m-d'), 'type' => 'notConnected', 'value' => $amounts['notConnected']]);
@@ -110,7 +111,6 @@ class Region extends JSON_Model
         $this->cache->delete("region_{$region}");
 
         return;
-
     }
 
 }

@@ -107,6 +107,10 @@ export default Component.extend(QueryMixin, {
       return 'notConnected:1';
     }
 
+    if (type == 'hasIntersection') {
+      return 'hasIntersection:1';
+    }
+
     if (type == 'short') {
       return 'length:<|5';
     }
