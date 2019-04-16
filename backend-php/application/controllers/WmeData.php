@@ -1,31 +1,33 @@
 <?php
 defined('BASEPATH') or exit('No direct script access allowed');
 
-use Elkuku\Console\Helper\ConsoleProgressBar;
-
 class WmeData extends CI_Controller
 {
     private $country = 37;
 
-    public function getAllRegions($showProgressBar = false)
+    public function getAllRegions()
     {
         $startTime = microtime(true);
+        $now = new DateTime();
+        print "Started all at " . $now->format('Y-m-d H:i:s') . "\n";
 
         $this->db->query('TRUNCATE TABLE segment');
         $this->db->query('TRUNCATE TABLE connection');
         $this->db->query('TRUNCATE TABLE street');
         $this->db->query('TRUNCATE TABLE city');
         $this->db->query('TRUNCATE TABLE user');
+        print "Cleared in " . $this->showTime(microtime(true) - $startTime) . "\n";
 
         $this->db->select('id');
         $regions = $this->db->get('region')->result();
         foreach ($regions as $region) {
-            $this->getRegion($region->id, $showProgressBar);
+            $this->getRegion($region->id);
         }
-        print "All: " . $this->showTime(microtime(true) - $startTime) . "\n";
+        $this->divide();
+        print "Completed in " . $this->showTime(microtime(true) - $startTime) . "\n";
     }
 
-    public function getRegion($region = null, $showProgressBar = false)
+    public function getRegion($region = null)
     {
         if (!$region) {
             return;
@@ -40,41 +42,37 @@ class WmeData extends CI_Controller
         if (isset($row)) {
             $name = $row->name;
         }
-
-        if (!$showProgressBar) {
-            print $name . ":\n";
-        }
+        $now = new DateTime();
+        print "================================================================\n";
+        print "{$name} \n";
+        print "================================================================\n";
+        print " started at " . $now->format('Y-m-d H:i:s') . "\n";
 
         $this->db->query("DELETE segment, connection
         FROM segment
         JOIN connection ON connection.fromSegment = segment.id
         WHERE segment.region = {$region}");
+        print " cleared in " . $this->showTime(microtime(true) - $startTime) . "\n";
 
         $this->db->where(['region' => $region]);
         $bboxes = $this->db->get('bbox')->result();
 
         if (count($bboxes) == 0) {
-            print "{$name}:  bboxes not found.\n";
-            $this->divide();
+            print " bboxes not found.\n";
             return;
+        } else {
+            print " bboxes: " . count($bboxes) . "\n";
         }
 
-        $connections = [];
-        $segments = [];
         $streets = [];
         $cities = [];
         $users = [];
-        $bar;
 
         $this->load->model('api/connection', 'connection');
         $this->load->model('api/segment', 'segment');
 
         $startTime2 = microtime(true);
-        if ($showProgressBar) {
-            $bar = new ConsoleProgressBar("{$name}: Loading and saving %fraction% [%bar%] %percent% %elapsed%", '=>', '-', 100, count($bboxes));
-        }
 
-        $i = 1;
         foreach ($bboxes as $bbox) {
             $data = $this->getBBoxData($bbox);
 
@@ -112,77 +110,40 @@ class WmeData extends CI_Controller
                     $users[$value->id] = $value;
                 }
             }
-            if ($showProgressBar) {
-                $bar->update($i++);
-            }
         }
-        if (!$showProgressBar) {
-            print "  Load data: " . $this->showTime(microtime(true) - $startTime2) . "\n";
-        }
-
+        print " loaded and updated segments with connections in " . $this->showTime(microtime(true) - $startTime2) . "\n";
+        
+        $startTime2 = microtime(true);
         if (count($streets) > 0) {
-            $startTime2 = microtime(true);
             $this->load->model('api/street', 'street');
             $chunks = array_chunk($streets, 1000, true);
-            if ($showProgressBar) {
-                $bar->reset("\n{$name}: Updating streets %fraction% [%bar%] %percent% %elapsed%", '=>', '-', 100, count($chunks));
-            }
-            $i = 1;
             foreach ($chunks as $chunk) {
                 $this->street->setDataFromWME($chunk);
-                if ($showProgressBar) {
-                    $bar->update($i++);
-                }
-            }
-            if (!$showProgressBar) {
-                print "  Update streets: " . $this->showTime(microtime(true) - $startTime2) . "\n";
             }
         }
 
-        if (count($streets) > 0) {
-            $startTime2 = microtime(true);
+        if (count($cities) > 0) {
             $this->load->model('api/city', 'city');
             $chunks = array_chunk($cities, 1000, true);
-            if ($showProgressBar) {
-            $bar->reset("\n{$name}: Updating cities %fraction% [%bar%] %percent% %elapsed%", '=>', '-', 100, count($chunks));
-            }
-            $i = 1;
             foreach ($chunks as $chunk) {
                 $this->city->setDataFromWME($chunk);
-                if ($showProgressBar) {
-                    $bar->update($i++);
-                }
-            }
-            if (!$showProgressBar) {
-                print "  Update cities: " . $this->showTime(microtime(true) - $startTime2) . "\n";
             }
         }
 
         if (count($users) > 0) {
-            $startTime2 = microtime(true);
             $this->load->model('api/user', 'user');
             $chunks = array_chunk($users, 1000, true);
-            if ($showProgressBar) {
-                $bar->reset("\n{$name}: Updating users %fraction% [%bar%] %percent% %elapsed%", '=>', '-', 100, count($chunks));
-            }
-            $i = 1;
             foreach ($chunks as $chunk) {
                 $this->user->setDataFromWME($chunk);
-                if ($showProgressBar) {
-                    $bar->update($i++);
-                }
-            }
-
-            if (!$showProgressBar) {
-                print "  Update users: " . $this->showTime(microtime(true) - $startTime2) . "\n";
             }
         }
+        print " updated streets, cities and users in " . $this->showTime(microtime(true) - $startTime2) . "\n";
 
         $this->load->model('api/region', 'region');
         $this->region->finishData($region, $this->country);
-
-        print "\n{$name}: " . $this->showTime(microtime(true) - $startTime);
-        $this->divide();
+        print "----------------------------------------------------------------\n";
+        print "{$name} completed in " . $this->showTime(microtime(true) - $startTime) . "\n";
+        print "----------------------------------------------------------------\n\n";
     }
 
     private function getBBoxData($bbox)
@@ -230,7 +191,7 @@ class WmeData extends CI_Controller
     private function divide()
     {
         print "\n";
-        print "========================================================================\n";
+        print "================================================================\n";
         print "\n";
     }
 
