@@ -148,7 +148,7 @@ class WmeData extends CI_Controller
 
     private function getBBoxData($bbox)
     {
-        $url = "https://www.waze.com/row-Descartes/app/Features?language=en&bbox={$bbox->west},{$bbox->south},{$bbox->east},{$bbox->north}&roadTypes=1,2,3,4,6,7,8,9,11,12,13,14,15,17,19,20,21,22";
+        $url = "https://www.waze.com/row-Descartes/app/Features?language=en&bbox={$bbox->west},{$bbox->south},{$bbox->east},{$bbox->north}&roadTypes=1,2,3,4,6,7,8,9,11,12,13,14,15,17,20,21,22";
         $curl = curl_init($url);
         curl_setopt($curl, CURLOPT_HEADER, 1);
         curl_setopt($curl, CURLOPT_COOKIEJAR, 'cookies.txt');

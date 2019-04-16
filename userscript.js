@@ -136,7 +136,7 @@ function startchecker() {
             let data = await httpGet(
                 `/row-Descartes/app/Features?
                   language=en&bbox=${box.west},${box.south},${box.east},${box.north}
-                  &roadTypes=1,2,3,4,6,7,8,9,11,12,13,14,15,17,19,20,21,22`)
+                  &roadTypes=1,2,3,4,6,7,8,9,11,12,13,14,15,17,20,21,22`)
                 .then(response => response.json());
 
             // let data = JSON.parse(json);
