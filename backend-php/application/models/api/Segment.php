@@ -284,6 +284,12 @@ class Segment extends JSON_Model
                         $segment->lat = $startPoint->getY();
                     }
 
+                    if ($segment->lockRank === null) {
+                        $lockRank = 0;
+                    } else {
+                        $lockRank = (int) $segment->lockRank + 1;
+                    }
+
                     $segmentsForSave[] = [
                         'id' => $segment->id,
                         'allowNoDirection' => (int) $segment->allowNoDirection,
@@ -301,7 +307,7 @@ class Segment extends JSON_Model
                         'hasHNs' => (int) $segment->hasHNs,
                         'length' => (int) $segment->length,
                         'level' => (int) $segment->level,
-                        'lockRank' => (int) $segment->lockRank,
+                        'lockRank' => $lockRank,
                         'street' => (int) $segment->primaryStreetID,
                         'rank' => (int) $segment->rank,
                         'revDirection' => (int) $segment->revDirection,
