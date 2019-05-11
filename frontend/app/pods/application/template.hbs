@@ -1,12 +1,10 @@
 <div class="ui stackable fixed menu">
+  <a href="#" class="item"  {{action 'toogleSidebar'}}><i class="bars icon"></i></a>
   {{#link-to 'index' class="item" }}<i class="home icon"></i>{{/link-to}}
-
-  {{#each regions as |region|}}
-
-    {{#link-to 'region' region.id classNames='item' }}
+  {{#each model.regions as |region|}}
+    {{#link-to 'region' region.id classNames='item top-menu-item'}}
       {{region.name}}
     {{/link-to}}
-
   {{/each}}
   <div class="right menu">
     {{#link-to 'users' classNames='item' }}
@@ -25,8 +23,12 @@
   </div>
 </div>
 
-<div class="main-content">
-  <div class="ui grid">
-    {{outlet}}
+<div class="pushable">
+  {{sidebar-menu regions=model.regions}}
+  <div class="pusher main-content">
+    <div class="ui grid">
+      {{outlet}}
+    </div>
   </div>
 </div>
+

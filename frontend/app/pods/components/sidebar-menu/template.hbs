@@ -1,0 +1,7 @@
+<div class="ui sidebar inverted vertical menu">
+{{#each regions as |region|}}
+  {{#link-to 'region' region.id classNames='item' invokeAction=(action 'hideSidebar')}}
+    {{region.name}}
+  {{/link-to}}
+{{/each}}
+</div>

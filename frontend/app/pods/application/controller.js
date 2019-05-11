@@ -1,6 +1,7 @@
 import Controller from '@ember/controller';
 import { inject as service } from '@ember/service';
 import { computed, observer } from '@ember/object';
+import $ from 'jquery';
 
 export default Controller.extend({
   i18n: service(),
@@ -37,4 +38,12 @@ export default Controller.extend({
     const locale = this.get('locale');
     this.setLocale(locale);
   }),
+
+  actions: {
+    toogleSidebar() {
+      $('.ui.sidebar')
+        .sidebar('setting', 'transition', 'overlay')
+        .sidebar('toggle');
+    },
+  },
 });
