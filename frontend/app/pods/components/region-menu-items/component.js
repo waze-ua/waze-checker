@@ -4,15 +4,33 @@ import { inject as service } from '@ember/service';
 import { task } from 'ember-concurrency';
 import ENV from 'waze-checker/config/environment';
 
+const menuItems = [
+  'withoutSpeed',
+  'speedMore90InCity',
+  'withLowLock',
+  'notConnected',
+  'withoutTurns',
+  'hasIntersection',
+  'short',
+  'withNameWithoutCity',
+  'unpaved',
+  'withAverageSpeedCamera',
+  'new',
+  'revDirection',
+  'toll',
+];
+
 export default Component.extend({
   tagName: '',
   hostname: ENV.hostname,
   amounts: null,
+  menuItems: null,
 
   ajax: service(),
 
   init() {
     this._super(...arguments);
+    this.set('menuItems', menuItems);
     get(this, 'fetchAmounts').perform();
   },
 
