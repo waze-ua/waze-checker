@@ -200,7 +200,7 @@ class Segment extends JSON_Model
         //unpaved
         $this->db->select('count(s.id) amount');
         $this->db->from('segment s');
-        $this->db->where("s.region = {$region} AND (s.flags = 17 OR s.flags = 16)");
+        $this->db->where("s.region = {$region} AND (s.flags = 17 OR s.flags = 16 OR s.flags = 48)");
         $query = $this->db->get();
         $row = $query->row();
         if (isset($row)) {
