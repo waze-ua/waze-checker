@@ -137,7 +137,7 @@ export default Component.extend(QueryMixin, {
     }
 
     if (type == 'unpaved') {
-      return { or: ['flags:16', 'flags:17'] };
+      return { or: ['flags:16', 'flags:17', 'flags:48'] };
     }
 
     if (type == 'new') {
