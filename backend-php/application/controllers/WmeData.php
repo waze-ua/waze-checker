@@ -167,11 +167,11 @@ class WmeData extends CI_Controller
         return null;
     }
 
-    public function setCookie($web_session = "")
+    public function setCookie($web_session = "", $csrf_token = "")
     {
         $curl = curl_init('https://www.waze.com/login/get');
         curl_setopt($curl, CURLOPT_HEADER, 1);
-        curl_setopt($curl, CURLOPT_COOKIE, "_web_session={$web_session}");
+        curl_setopt($curl, CURLOPT_COOKIE, "_web_session={$web_session};_csrf_token={$csrf_token}");
         curl_setopt($curl, CURLOPT_COOKIEJAR, 'cookies.txt');
         curl_setopt($curl, CURLOPT_RETURNTRANSFER, 1);
         $response = curl_exec($curl);
