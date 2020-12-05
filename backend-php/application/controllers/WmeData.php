@@ -112,7 +112,7 @@ class WmeData extends CI_Controller
             }
         }
         print " loaded and updated segments with connections in " . $this->showTime(microtime(true) - $startTime2) . "\n";
-        
+
         $startTime2 = microtime(true);
         if (count($streets) > 0) {
             $this->load->model('api/street', 'street');
@@ -154,17 +154,11 @@ class WmeData extends CI_Controller
         curl_setopt($curl, CURLOPT_COOKIEJAR, 'cookies.txt');
         curl_setopt($curl, CURLOPT_COOKIEFILE, 'cookies.txt');
         curl_setopt($curl, CURLOPT_RETURNTRANSFER, 1);
-        $response = curl_exec($curl);
-        $header_size = curl_getinfo($curl, CURLINFO_HEADER_SIZE);
-        $header = substr($response, 0, $header_size);
-        $body = substr($response, $header_size);
+        $data = $this->getResponseBody($curl);
         curl_close($curl);
 
-        if ($body) {
-            return json_decode($body);
-        }
 
-        return null;
+        return $data;
     }
 
     public function setCookie($web_session = "", $csrf_token = "")
@@ -174,18 +168,52 @@ class WmeData extends CI_Controller
         curl_setopt($curl, CURLOPT_COOKIE, "_web_session={$web_session};_csrf_token={$csrf_token}");
         curl_setopt($curl, CURLOPT_COOKIEJAR, 'cookies.txt');
         curl_setopt($curl, CURLOPT_RETURNTRANSFER, 1);
+        $data = $this->getResponseBody($curl);
+        curl_close($curl);
+
+        if ($data) {
+            $username = $data->reply->message;
+            if ($username) {
+                return print "OK: Logged by {$username}\n";
+            }
+        }
+
+        print "ERROR: user is not logged in\n";
+    }
+
+    public function refreshCookie()
+    {
+        $curl = curl_init('https://www.waze.com/login/get');
+        curl_setopt($curl, CURLOPT_HEADER, 1);
+        curl_setopt($curl, CURLOPT_COOKIEJAR, 'cookies.txt');
+        curl_setopt($curl, CURLOPT_COOKIEFILE, 'cookies.txt');
+        curl_setopt($curl, CURLOPT_RETURNTRANSFER, 1);
+
+        $data = $this->getResponseBody($curl);
+        curl_close($curl);
+
+        if ($data) {
+            $username = $data->reply->message;
+            if ($username) {
+                return print "OK: cookie updated for {$username}\n";
+            }
+        }
+
+        print "ERROR: user is not logged in\n";
+    }
+
+
+    private function getResponseBody($curl)
+    {
         $response = curl_exec($curl);
         $header_size = curl_getinfo($curl, CURLINFO_HEADER_SIZE);
-        $header = substr($response, 0, $header_size);
         $body = substr($response, $header_size);
-        $data = json_decode($body);
-        $username = $data->reply->message;
-        if ($username) {
-            print "OK: Logged by {$username}\n";
-        } else {
-            print "ERROR: user is not logged in\n";
+
+        if ($body) {
+            return json_decode($body);
         }
-        curl_close($curl);
+
+        return null;
     }
 
     private function divide()
@@ -202,5 +230,4 @@ class WmeData extends CI_Controller
         $seconds = (int) $duration - $hours * 60 * 60 - $minutes * 60;
         return ($hours == 0 ? "00" : $hours) . ":" . ($minutes == 0 ? "00" : ($minutes < 10 ? "0" . $minutes : $minutes)) . ":" . ($seconds == 0 ? "00" : ($seconds < 10 ? "0" . $seconds : $seconds));
     }
-
 }
