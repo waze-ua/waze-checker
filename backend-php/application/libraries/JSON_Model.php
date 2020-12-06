@@ -25,7 +25,9 @@ class JSON_Model extends CI_Model
         $this->joins = [];
         $this->orderArr = [];
         $this->modelMap = null;
+
         $this->load->helper('inflector');
+        $this->load->database();
     }
 
     public function getSQLTable()

@@ -3,7 +3,13 @@ defined('BASEPATH') or exit('No direct script access allowed');
 
 class WmeData extends CI_Controller
 {
-    private $country = 232;
+
+    public function __construct()
+    {
+        parent::__construct();
+
+        $this->load->database();
+    }
 
     public function getAllRegions($date = null)
     {
@@ -404,13 +410,14 @@ class WmeData extends CI_Controller
     private function deleteExtraRows()
     {
         $startTime = microtime(true);
+        $countryId = env('COUNTRY_ID');
 
         $this->db->query("DELETE segment, connection, street, city
         FROM segment
         JOIN connection ON connection.fromSegment = segment.id
         JOIN street ON street.id = segment.street
         JOIN city ON city.id = street.city
-        WHERE city.country != {$this->country}");
+        WHERE city.country != {$countryId}");
 
         print " deleted extra rows in " . $this->showTime(microtime(true) - $startTime) . "\n";
     }

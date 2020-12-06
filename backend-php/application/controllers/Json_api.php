@@ -17,6 +17,8 @@ class Json_api extends CI_Controller
         header('Access-Control-Allow-Methods: OPTIONS, GET, POST, PATCH, DELETE');
         header('Access-Control-Allow-Credentials: true');
         header('Access-Control-Allow-Headers: Origin, Content-Type, Authorization');
+        
+        $this->load->database();
         $this->load->helper('inflector');
        // $this->load->model($this->getModelName(), 'mainModel');
     }
