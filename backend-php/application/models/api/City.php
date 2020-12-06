@@ -2,6 +2,7 @@
 defined('BASEPATH') or exit('No direct script access allowed');
 
 require_once APPPATH . 'libraries/JSON_Model.php';
+require_once APPPATH . 'libraries/QueryBuilder.php';
 
 class City extends JSON_Model
 {
@@ -23,9 +24,7 @@ class City extends JSON_Model
     {
         if (count($cities) > 0) {
             $cities = array_unique($cities, SORT_REGULAR);
-            $ids = [];
-            foreach ($cities as $city) {
-                $ids[] = $city->id;
+            foreach ($cities as &$city) {
                 $city->country = $city->countryID;
 
                 if (isset($city->geometry)) {
@@ -42,11 +41,16 @@ class City extends JSON_Model
                 unset($city->permissions);
                 unset($city->rank);
                 unset($city->stateID);
+
+                $city = (array) $city;
+
+                $city['name'] = $this->db->escape($city['name']);
+                if (!$city['isEmpty']) {
+                    $city['isEmpty'] = 0;
+                }
             }
 
-            $this->db->where_in('id', $ids);
-            $this->db->delete('city');
-            $this->db->insert_batch('city', $cities);
+            $this->db->query(ReplaceBatch('city',  $cities));
         }
         return;
     }
