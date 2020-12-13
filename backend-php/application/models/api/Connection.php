@@ -2,6 +2,7 @@
 defined('BASEPATH') or exit('No direct script access allowed');
 
 require_once APPPATH . 'libraries/JSON_Model.php';
+require_once APPPATH . 'libraries/QueryBuilder.php';
 
 class Connection extends JSON_Model
 {
@@ -20,9 +21,6 @@ class Connection extends JSON_Model
         if (count((array) $connections) > 0) {
 
             $connectionsForSave = [];
-            $ids = [];
-            $idsTo = [];
-
             foreach ($connections as $key => $connection) {
                 $from = (int) substr($key, 0, -1);
                 $direction = 0;
@@ -30,14 +28,13 @@ class Connection extends JSON_Model
                     $direction = 1;
                 }
 
-                $ids[] = $from;
-
                 foreach ($connection as $toKey => $isAllowed) {
                     $to = (int) substr($toKey, 0, -1);
+                    $isAllowed = 0;
+
                     if (is_object($isAllowed)) {
                         $isAllowed = $isAllowed->navigable;
                     }
-                    $idsTo[] = $to;
 
                     $connectionsForSave[] = [
                         'fromSegment' => $from,
@@ -48,11 +45,7 @@ class Connection extends JSON_Model
                 }
             }
 
-            $this->db->where_in('fromSegment', $ids);
-            $this->db->delete('connection');
-
-            $this->db->insert_batch('connection', $connectionsForSave);
+            $this->db->query(ReplaceBatch('connection',  $connectionsForSave));
         }
     }
-
 }
