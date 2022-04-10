@@ -11,24 +11,6 @@
 <td>{{lock-rank segment.lockRank}}</td>
 <td>{{date-to-string segment.updatedOn}}</td>
 <td class="center aligned">
-  {{#if segment.fwdDirection}}
-  <div class="ui image teal label">
-    A -> B
-    {{#if segment.fwdMaxSpeed}}
-      <div class="detail">{{segment.fwdMaxSpeed}}</div>
-    {{/if}}
-    </div>
-  {{/if}}
-  {{#if segment.revDirection}}
-  <div class="ui image blue label">
-    B -> A
-    {{#if segment.fwdMaxSpeed}}
-      <div class="detail">{{segment.fwdMaxSpeed}}</div>
-    {{/if}}
-    </div>
-  {{/if}}
-</td>
-<td class="center aligned">
   {{#if segment.hasTransition}}
     {{#ui-popup content=(t 'wasTransitionOnLink')}}
       <i class="external square icon" title=""></i>

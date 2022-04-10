@@ -1,4 +1,5 @@
 export default {
+  cameras: 'Cameras',
   city: 'City',
   street: 'Street',
   roadType: 'Road type',

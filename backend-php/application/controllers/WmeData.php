@@ -112,7 +112,8 @@ class WmeData extends CI_Controller
                 foreach ($data->errorList as $error) {
                     print "ERROR: {$error->details} \n";
                 }
-                return;
+                
+                continue;
             }
 
             if (isset($data->connections)) {
