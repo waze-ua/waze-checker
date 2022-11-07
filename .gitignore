@@ -1,2 +1,5 @@
 # compiled output
 /dist
+
+.env
+cookie*.txt

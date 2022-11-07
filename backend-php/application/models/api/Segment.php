@@ -1,6 +1,8 @@
 <?php
 defined('BASEPATH') or exit('No direct script access allowed');
+
 require_once APPPATH . 'libraries/JSON_Model.php';
+require_once APPPATH . 'libraries/QueryBuilder.php';
 
 use Phayes\GeoPHP\Adapters\GeoHash;
 use Phayes\GeoPHP\GeoPHP;
@@ -334,10 +336,8 @@ class Segment extends JSON_Model
                 }
             }
             if (count($ids) > 0) {
-                $this->db->where_in('id', $ids);
-                $this->db->delete('segment');
+                $this->db->query(ReplaceBatch('segment',  $segmentsForSave));
 
-                $this->db->insert_batch('segment', $segmentsForSave, false);
                 $idsStr = implode(',', $ids);
 
                 $query = $this->db->query("SELECT s1.id id FROM `segment` s1

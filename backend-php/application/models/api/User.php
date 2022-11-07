@@ -2,6 +2,7 @@
 defined('BASEPATH') or exit('No direct script access allowed');
 
 require_once APPPATH . 'libraries/JSON_Model.php';
+require_once APPPATH . 'libraries/QueryBuilder.php';
 
 class User extends JSON_Model
 {
@@ -24,20 +25,17 @@ class User extends JSON_Model
     {
         if (count($users) > 0) {
             $users = array_unique($users, SORT_REGULAR);
-            $ids = [];
 
-            foreach ($users as $user) {
-                $ids[] = $user->id;
+            foreach ($users as &$user) {
                 if (isset($user->inactive)) {
                     unset($user->inactive);
                 }
-                // $user->userName = $this->db->escape_str($user->userName);
+                $user = (array) $user;
+
+                $user['userName'] = $this->db->escape($user['userName']);
             }
 
-            $this->db->where_in('id', $ids);
-            $this->db->delete('user');
-            $this->db->insert_batch('user', $users);
+            $this->db->query(ReplaceBatch('user', $users));
         }
     }
-
 }
