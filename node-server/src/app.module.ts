@@ -6,6 +6,7 @@ import { AppService } from './app.service';
 import { getOrmConfig } from './configs/orm.config';
 import { RegionModule } from './region/region.module';
 import { BboxModule } from './bbox/bbox.module';
+import { UserModule } from './user/user.module';
 
 @Module({
   imports: [
@@ -17,6 +18,7 @@ import { BboxModule } from './bbox/bbox.module';
     ConfigModule.forRoot(),
     BboxModule,
     RegionModule,
+    UserModule
   ],
   controllers: [AppController],
   providers: [AppService],

@@ -2,6 +2,7 @@ import { MysqlConnectionOptions } from 'typeorm/driver/mysql/MysqlConnectionOpti
 import { BboxEntity } from 'src/bbox/bbox.entity';
 import { RegionEntity } from 'src/region/region.entity';
 import { ConfigService } from '@nestjs/config';
+import { UserEntity } from 'src/user/user.entity';
 
 export const getOrmConfig = async (configService: ConfigService): Promise<MysqlConnectionOptions> => {
   return {
@@ -11,6 +12,6 @@ export const getOrmConfig = async (configService: ConfigService): Promise<MysqlC
     username: configService.get('DB_USERNAME'),
     password: configService.get('DB_PASSWORD'),
     database: configService.get('DB_DATABASE'),
-    entities: [BboxEntity, RegionEntity],
+    entities: [BboxEntity, RegionEntity, UserEntity],
   };
 };
