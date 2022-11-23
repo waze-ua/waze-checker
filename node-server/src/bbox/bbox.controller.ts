@@ -8,9 +8,9 @@ export class BboxController {
 
   @Get()
   async findAll(): Promise<BboxesResponseInterface> {
-    const regions = await this.bboxService.findAll();
+    const bboxes = await this.bboxService.findAll();
 
-    return this.bboxService.buildResponse(regions);
+    return this.bboxService.buildResponse(bboxes);
   }
 
   @Get(':id')
@@ -19,5 +19,4 @@ export class BboxController {
 
     return this.bboxService.buildResponse(bbox);
   }
-
 }

@@ -8,9 +8,9 @@ export class UserController {
 
   @Get()
   async findAll(): Promise<UsersResponseInterface> {
-    const regions = await this.userService.findAll();
+    const users = await this.userService.findAll();
 
-    return this.userService.buildResponse(regions);
+    return this.userService.buildResponse(users);
   }
 
   @Get(':id')

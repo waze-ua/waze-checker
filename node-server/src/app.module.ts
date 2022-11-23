@@ -7,6 +7,7 @@ import { getOrmConfig } from './configs/orm.config';
 import { RegionModule } from './region/region.module';
 import { BboxModule } from './bbox/bbox.module';
 import { UserModule } from './user/user.module';
+import { StreetModule } from './street/street.module';
 
 @Module({
   imports: [
@@ -18,6 +19,7 @@ import { UserModule } from './user/user.module';
     ConfigModule.forRoot(),
     BboxModule,
     RegionModule,
+    StreetModule,
     UserModule
   ],
   controllers: [AppController],
