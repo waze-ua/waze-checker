@@ -6,6 +6,7 @@ import { UserEntity } from 'src/user/user.entity';
 import { StreetEntity } from 'src/street/street.entity';
 import { SegmentEntity } from 'src/segment/segment.entity';
 import { ConnectionEntity } from 'src/connection/connection.entity';
+import { RoadTypeEntity } from 'src/roadType/roadType.entity';
 
 export const getOrmConfig = async (
   configService: ConfigService,
@@ -21,6 +22,7 @@ export const getOrmConfig = async (
       BboxEntity,
       ConnectionEntity,
       RegionEntity,
+      RoadTypeEntity,
       SegmentEntity,
       StreetEntity,
       UserEntity,

@@ -10,6 +10,7 @@ import { UserModule } from './user/user.module';
 import { StreetModule } from './street/street.module';
 import { SegmentModule } from './segment/segment.module';
 import { ConnectionModule } from './connection/connection.module';
+import { RoadTypeModule } from './roadType/roadType.module';
 
 @Module({
   imports: [
@@ -22,6 +23,7 @@ import { ConnectionModule } from './connection/connection.module';
     BboxModule,
     ConnectionModule,
     RegionModule,
+    RoadTypeModule,
     SegmentModule,
     StreetModule,
     UserModule,
