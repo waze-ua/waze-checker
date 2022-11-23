@@ -5,6 +5,7 @@ import { ConfigService } from '@nestjs/config';
 import { UserEntity } from 'src/user/user.entity';
 import { StreetEntity } from 'src/street/street.entity';
 import { SegmentEntity } from 'src/segment/segment.entity';
+import { ConnectionEntity } from 'src/connection/connection.entity';
 
 export const getOrmConfig = async (
   configService: ConfigService,
@@ -18,6 +19,7 @@ export const getOrmConfig = async (
     database: configService.get('DB_DATABASE'),
     entities: [
       BboxEntity,
+      ConnectionEntity,
       RegionEntity,
       SegmentEntity,
       StreetEntity,

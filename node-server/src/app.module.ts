@@ -9,6 +9,7 @@ import { BboxModule } from './bbox/bbox.module';
 import { UserModule } from './user/user.module';
 import { StreetModule } from './street/street.module';
 import { SegmentModule } from './segment/segment.module';
+import { ConnectionModule } from './connection/connection.module';
 
 @Module({
   imports: [
@@ -19,6 +20,7 @@ import { SegmentModule } from './segment/segment.module';
     }),
     ConfigModule.forRoot(),
     BboxModule,
+    ConnectionModule,
     RegionModule,
     SegmentModule,
     StreetModule,
