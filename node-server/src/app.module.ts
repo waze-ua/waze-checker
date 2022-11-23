@@ -8,21 +8,23 @@ import { RegionModule } from './region/region.module';
 import { BboxModule } from './bbox/bbox.module';
 import { UserModule } from './user/user.module';
 import { StreetModule } from './street/street.module';
+import { SegmentModule } from './segment/segment.module';
 
 @Module({
   imports: [
     TypeOrmModule.forRootAsync({
       imports: [ConfigModule],
       inject: [ConfigService],
-      useFactory: getOrmConfig
+      useFactory: getOrmConfig,
     }),
     ConfigModule.forRoot(),
     BboxModule,
     RegionModule,
+    SegmentModule,
     StreetModule,
-    UserModule
+    UserModule,
   ],
   controllers: [AppController],
   providers: [AppService],
 })
-export class AppModule { }
+export class AppModule {}

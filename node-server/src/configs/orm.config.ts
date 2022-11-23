@@ -4,6 +4,7 @@ import { RegionEntity } from 'src/region/region.entity';
 import { ConfigService } from '@nestjs/config';
 import { UserEntity } from 'src/user/user.entity';
 import { StreetEntity } from 'src/street/street.entity';
+import { SegmentEntity } from 'src/segment/segment.entity';
 
 export const getOrmConfig = async (
   configService: ConfigService,
@@ -15,6 +16,12 @@ export const getOrmConfig = async (
     username: configService.get('DB_USERNAME'),
     password: configService.get('DB_PASSWORD'),
     database: configService.get('DB_DATABASE'),
-    entities: [BboxEntity, RegionEntity, StreetEntity, UserEntity],
+    entities: [
+      BboxEntity,
+      RegionEntity,
+      SegmentEntity,
+      StreetEntity,
+      UserEntity,
+    ],
   };
 };
