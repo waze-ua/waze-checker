@@ -20,6 +20,8 @@ Router.map(function() {
       this.route('region', { path: ':region_id' });
     });
   });
+
+  this.route('checker')
 });
 
 export default Router;

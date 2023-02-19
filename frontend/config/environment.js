@@ -34,7 +34,7 @@ module.exports = function(environment) {
   };
 
   if (environment === 'development') {
-    ENV.hostname = 'http://waze-checker.local';
+    ENV.hostname = 'http://localhost:3000';
     // ENV.APP.LOG_RESOLVER = true;
     // ENV.APP.LOG_ACTIVE_GENERATION = true;
     // ENV.APP.LOG_TRANSITIONS = true;

@@ -1,0 +1,20 @@
+<div class="ui segment">
+  <input value={{this.countryId}} onchange={{action "handleChangeCountryId"}} />
+  <button type="button" onclick={{perform this.updateCountryId}}>
+    update countryId
+  </button>
+</div>
+<div class="ui segment">
+  {{#if (or this.checkLogin.isRunning this.user.user_id)}}
+    {{this.user.message}}
+  {{else}}
+    <input
+      value={{this.token}}
+      placeholder="web_session cookie"
+      onchange={{action "handleChangeToken"}}
+    />
+    <button type="button" onclick={{perform this.updateToken}}>
+      set web_session cookie
+    </button>
+  {{/if}}
+</div>

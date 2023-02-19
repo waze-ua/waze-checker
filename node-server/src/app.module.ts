@@ -11,6 +11,8 @@ import { StreetModule } from './street/street.module';
 import { SegmentModule } from './segment/segment.module';
 import { ConnectionModule } from './connection/connection.module';
 import { RoadTypeModule } from './roadType/roadType.module';
+import { CheckerModule } from './checker/checker.module';
+import { KeyValueModule } from './keyValue/keyValue.module';
 
 @Module({
   imports: [
@@ -27,6 +29,8 @@ import { RoadTypeModule } from './roadType/roadType.module';
     SegmentModule,
     StreetModule,
     UserModule,
+    CheckerModule,
+    KeyValueModule,
   ],
   controllers: [AppController],
   providers: [AppService],

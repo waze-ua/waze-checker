@@ -5,8 +5,8 @@ export class ConnectionEntity {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @Column('integer', { default: '' })
-  fromSegment: string;
+  @Column('integer', { default: 0 })
+  fromSegment: number;
 
   @Column('integer', { default: 0 })
   toSegment: number;
